@@ -5,6 +5,7 @@
 *.iml
 # Remove the following pattern if you wish to check in your lock file
 pubspec.lock
+*.i69n.dart
 
 # Conventional directory for build outputs
 build/

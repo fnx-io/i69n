@@ -5,5 +5,5 @@ builders:
     import: "package:i69n/builder.dart"
     builder_factories: ["yamlBasedBuilder"]
     build_extensions: {".i69n.yaml": [".i69n.dart"]}
-    build_to: cache
+    build_to: source
     auto_apply: all_packages

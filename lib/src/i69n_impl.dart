@@ -25,12 +25,12 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
   output.writeln("String get _languageCode => '${meta.languageCode}';");
   output.writeln("String get _localeName => '${meta.localeName}';");
   output.writeln("");
-  output.writeln("String _plural(int count, {String zero, String one, String two, String few, String many, String other})");
-  output.writeln("\t=>i69n.plural(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);");
-  output.writeln("String _ordinal(int count, {String zero, String one, String two, String few, String many, String other})");
-  output.writeln("\t=>i69n.ordinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);");
-  output.writeln("String _cardinal(int count, {String zero, String one, String two, String few, String many, String other})");
-  output.writeln("\t=>i69n.cardinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);");
+  output.writeln("String _plural(int count, {String zero, String one, String two, String few, String many, String other}) =>");
+  output.writeln("\ti69n.plural(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);");
+  output.writeln("String _ordinal(int count, {String zero, String one, String two, String few, String many, String other}) =>");
+  output.writeln("\ti69n.ordinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);");
+  output.writeln("String _cardinal(int count, {String zero, String one, String two, String few, String many, String other}) =>");
+  output.writeln("\ti69n.cardinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);");
   output.writeln("");
 
   for (var todo in todoList) {
