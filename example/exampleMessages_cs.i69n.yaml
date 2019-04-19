@@ -1,0 +1,12 @@
+generic:
+  done: Hotovo
+invoice:
+  create: Vytvořit fakturu
+  delete: Smazat fakturu
+  help: "Tuhle funkci použij
+  na vytváření faktur.
+  Boží!"
+  count(int a): "Už jsi vytvořil ${_plural(a, one:'fakturu', few:'faktury', many:'faktur')}."
+apples:
+  _apples(int cnt): "${_plural(cnt, one:'jablko', few: 'jablka', many:'jablek')}"
+  count(int cnt): "Snědl jsi $cnt ${_apples(cnt)}."

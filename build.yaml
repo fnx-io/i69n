@@ -1,0 +1,9 @@
+# Read about `build.yaml` at https://pub.dartlang.org/packages/build_config
+builders:
+
+  yamlBasedBuilder:
+    import: "package:i69n/builder.dart"
+    builder_factories: ["yamlBasedBuilder"]
+    build_extensions: {".i69n.yaml": [".i69n.dart"]}
+    build_to: cache
+    auto_apply: all_packages
