@@ -30,7 +30,8 @@ void main() async {
 
   // Override plurals for Czech or register support for your own language:
   i69n.registerResolver("cs", (int count, i69n.QuantityType type) {
-    if (type == i69n.QuantityType.cardinal && count == 1) return i69n.QuantityCategory.one;
+    if (type == i69n.QuantityType.cardinal && count == 1)
+      return i69n.QuantityCategory.one;
     return i69n.QuantityCategory.other;
   });
 

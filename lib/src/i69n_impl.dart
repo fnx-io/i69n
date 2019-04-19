@@ -25,12 +25,18 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
   output.writeln("String get _languageCode => '${meta.languageCode}';");
   output.writeln("String get _localeName => '${meta.localeName}';");
   output.writeln("");
-  output.writeln("String _plural(int count, {String zero, String one, String two, String few, String many, String other}) =>");
-  output.writeln("\ti69n.plural(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);");
-  output.writeln("String _ordinal(int count, {String zero, String one, String two, String few, String many, String other}) =>");
-  output.writeln("\ti69n.ordinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);");
-  output.writeln("String _cardinal(int count, {String zero, String one, String two, String few, String many, String other}) =>");
-  output.writeln("\ti69n.cardinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);");
+  output.writeln(
+      "String _plural(int count, {String zero, String one, String two, String few, String many, String other}) =>");
+  output.writeln(
+      "\ti69n.plural(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);");
+  output.writeln(
+      "String _ordinal(int count, {String zero, String one, String two, String few, String many, String other}) =>");
+  output.writeln(
+      "\ti69n.ordinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);");
+  output.writeln(
+      "String _cardinal(int count, {String zero, String one, String two, String few, String many, String other}) =>");
+  output.writeln(
+      "\ti69n.cardinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);");
   output.writeln("");
 
   for (var todo in todoList) {
@@ -45,7 +51,7 @@ ClassMeta generateMessageObjectName(String fileName) {
   String name = fileName.replaceAll(".i69n.yaml", "");
 
   List<String> nameParts = name.split("_");
-  if (nameParts.length < 1) {
+  if (nameParts.isEmpty) {
     throw new Exception(_renderFileNameError(name));
   }
 
@@ -69,7 +75,8 @@ ClassMeta generateMessageObjectName(String fileName) {
     if (nameParts.length >= 2) {
       String languageCode = nameParts[1];
       if (twoCharsLower.allMatches(languageCode).length != 1) {
-        throw new Exception("Wrong language code '$languageCode' in file name '$fileName'. Language code must match $twoCharsLower");
+        throw new Exception(
+            "Wrong language code '$languageCode' in file name '$fileName'. Language code must match $twoCharsLower");
       }
       result.languageCode = languageCode;
       result.localeName = languageCode;
@@ -77,7 +84,8 @@ ClassMeta generateMessageObjectName(String fileName) {
     if (nameParts.length == 3) {
       String countryCode = nameParts[2];
       if (twoCharsUpper.allMatches(countryCode).length != 1) {
-        throw new Exception("Wrong country code '$countryCode' in file name '$fileName'. Country code must match $twoCharsUpper");
+        throw new Exception(
+            "Wrong country code '$countryCode' in file name '$fileName'. Country code must match $twoCharsUpper");
       }
       result.localeName = "${result.languageCode}_${countryCode}";
     }
@@ -92,7 +100,8 @@ void renderTodoItem(TodoItem todo, StringBuffer output) {
   if (meta.isDefault) {
     output.writeln("class ${meta.objectName} {");
   } else {
-    output.writeln("class ${meta.objectName} extends ${meta.defaultObjectName} {");
+    output.writeln(
+        "class ${meta.objectName} extends ${meta.defaultObjectName} {");
   }
 
   if (meta.parent == null) {
@@ -102,14 +111,16 @@ void renderTodoItem(TodoItem todo, StringBuffer output) {
     if (meta.isDefault) {
       output.writeln("\tconst ${meta.objectName}(this._parent);");
     } else {
-      output.writeln("\tconst ${meta.objectName}(this._parent):super(_parent);");
+      output
+          .writeln("\tconst ${meta.objectName}(this._parent):super(_parent);");
     }
   }
   content.forEach((k, v) {
     if (v is YamlMap) {
       String prefix = _firstCharUpper(k);
       ClassMeta child = meta.nest(prefix);
-      output.writeln("\t${child.objectName} get ${k} => ${child.objectName}(this);");
+      output.writeln(
+          "\t${child.objectName} get ${k} => ${child.objectName}(this);");
     } else {
       if (k.contains("(")) {
         // function
@@ -122,7 +133,8 @@ void renderTodoItem(TodoItem todo, StringBuffer output) {
   output.writeln("}");
 }
 
-void prepareTodoList(List<TodoItem> todoList, YamlMap messages, ClassMeta name) {
+void prepareTodoList(
+    List<TodoItem> todoList, YamlMap messages, ClassMeta name) {
   TodoItem todo = new TodoItem(name, messages);
   todoList.add(todo);
 

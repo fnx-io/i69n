@@ -5,27 +5,60 @@ import 'package:yaml/yaml.dart';
 
 void main() {
   group('Messages meta data', () {
-    testMeta("messages", isDefault: true, defaultObjectName: "Messages", objectName: "Messages", languageCode: "en", localeName: "en");
-    testMeta("messages_cs", isDefault: false, defaultObjectName: "Messages", objectName: "Messages_cs", languageCode: "cs", localeName: "cs");
+    testMeta("messages",
+        isDefault: true,
+        defaultObjectName: "Messages",
+        objectName: "Messages",
+        languageCode: "en",
+        localeName: "en");
+    testMeta("messages_cs",
+        isDefault: false,
+        defaultObjectName: "Messages",
+        objectName: "Messages_cs",
+        languageCode: "cs",
+        localeName: "cs");
 
-    testMeta("domainMessages", isDefault: true, defaultObjectName: "DomainMessages", objectName: "DomainMessages", languageCode: "en", localeName: "en");
-    testMeta("domainMessages_cs", isDefault: false, defaultObjectName: "DomainMessages", objectName: "DomainMessages_cs", languageCode: "cs", localeName: "cs");
-    testMeta("domainMessages_cs_CZ", isDefault: false, defaultObjectName: "DomainMessages", objectName: "DomainMessages_cs_CZ", languageCode: "cs", localeName: "cs_CZ");
+    testMeta("domainMessages",
+        isDefault: true,
+        defaultObjectName: "DomainMessages",
+        objectName: "DomainMessages",
+        languageCode: "en",
+        localeName: "en");
+    testMeta("domainMessages_cs",
+        isDefault: false,
+        defaultObjectName: "DomainMessages",
+        objectName: "DomainMessages_cs",
+        languageCode: "cs",
+        localeName: "cs");
+    testMeta("domainMessages_cs_CZ",
+        isDefault: false,
+        defaultObjectName: "DomainMessages",
+        objectName: "DomainMessages_cs_CZ",
+        languageCode: "cs",
+        localeName: "cs_CZ");
   });
 
   group('Plurals', () {
     test('en', () {
-      expect(plural(1, "en", one: "ONE!", few: "FEW!", other: "OTHER!"), equals("ONE!"));
-      expect(plural(2, "en", one: "ONE!", few: "FEW!", other: "OTHER!"), equals("OTHER!"));
-      expect(plural(3, "en", one: "ONE!", few: "FEW!", other: "OTHER!"), equals("OTHER!"));
-      expect(plural(10, "en", one: "ONE!", few: "FEW!", other: "OTHER!"), equals("OTHER!"));
+      expect(plural(1, "en", one: "ONE!", few: "FEW!", other: "OTHER!"),
+          equals("ONE!"));
+      expect(plural(2, "en", one: "ONE!", few: "FEW!", other: "OTHER!"),
+          equals("OTHER!"));
+      expect(plural(3, "en", one: "ONE!", few: "FEW!", other: "OTHER!"),
+          equals("OTHER!"));
+      expect(plural(10, "en", one: "ONE!", few: "FEW!", other: "OTHER!"),
+          equals("OTHER!"));
     });
 
     test('cs', () {
-      expect(plural(1, "cs", one: "ONE!", few: "FEW!", other: "OTHER!"), equals("ONE!"));
-      expect(plural(2, "cs", one: "ONE!", few: "FEW!", other: "OTHER!"), equals("FEW!"));
-      expect(plural(3, "cs", one: "ONE!", few: "FEW!", other: "OTHER!"), equals("FEW!"));
-      expect(plural(10, "cs", one: "ONE!", few: "FEW!", other: "OTHER!"), equals("OTHER!"));
+      expect(plural(1, "cs", one: "ONE!", few: "FEW!", other: "OTHER!"),
+          equals("ONE!"));
+      expect(plural(2, "cs", one: "ONE!", few: "FEW!", other: "OTHER!"),
+          equals("FEW!"));
+      expect(plural(3, "cs", one: "ONE!", few: "FEW!", other: "OTHER!"),
+          equals("FEW!"));
+      expect(plural(10, "cs", one: "ONE!", few: "FEW!", other: "OTHER!"),
+          equals("OTHER!"));
     });
   });
 
@@ -59,7 +92,12 @@ void main() {
   });
 }
 
-void testMeta(String name, {bool isDefault, String defaultObjectName, String objectName, String languageCode, String localeName}) {
+void testMeta(String name,
+    {bool isDefault,
+    String defaultObjectName,
+    String objectName,
+    String languageCode,
+    String localeName}) {
   ClassMeta meta = generateMessageObjectName(name);
   test('$name: isDefault', () {
     expect(meta.isDefault, equals(isDefault));
