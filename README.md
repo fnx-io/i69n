@@ -14,7 +14,7 @@ a Dart objects from those files.
 * The official Dart/Flutter approach for i18n seems ... complicated and kind of ... heavyweight.
 * I would like my messages to be **checked during compile time** - is that message really there? Key to the localized message should
  not be just some random string, it should be a method!
-* And if the massage takes some parameters, the method should take those parameters! 
+* And if the message takes some parameters, the method should take those parameters! 
 * I like to bundle messages into thematic groups, the i18n tool should support that and help me with it
 * Dart has awesome **string interpolation**, I want to leverage that!
 * I like build_runner and code generation.
@@ -121,7 +121,6 @@ And here is how to work with different translations:
     }
     
                       
-
 How to decide what translation to use (ExampleMessages_cs?, ExampleMessages_hu?) **is up to you**.
 The package simply generates message objects, that's all.
 Where and how to store instances of these message classes - 
