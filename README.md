@@ -1,10 +1,23 @@
 Alternative internationalization package for Dart and Flutter.
 
 Write your messages into YAML files, and let this package generate
-a Dart objects from those files.
+a Dart objects from those files. Turn this YAML:
+
+    generic:
+      ok: OK
+      done: DONE
+
+Into this Dart class:
+
+    class GenericMessages {
+      const GenericMessages();
+      String get ok => "OK";
+      String get done => "DONE";
+    }
+
 
 **WARNING: Not battle tested yet!** Also the documentation is rather rudimentary. It's more or less a
-proof of concept. But seems promising.
+proof of concept. But looks promising.
 
 # i69n: 51 points better than i18n!
 
@@ -13,10 +26,10 @@ proof of concept. But seems promising.
 ## Motivation
 
 * The official Dart/Flutter approach to i18n seems ... complicated and kind of ... heavyweight.
-* I would like my messages to be **checked during compile time** - is that message really there? Key to the
- localized message should not be just some arbitrary String, it should be a getter method!
+* I would like my messages to be **checked during compile time**. Is that message really there?
+* Key to the localized message should not be just some arbitrary String, it should be a getter method!
 * And if the message takes some parameters, the method should take those parameters! 
-* I like to bundle messages into thematic groups, the i18n tool should support that and help me with it
+* I like to bundle messages into thematic groups, the i18n tool should support that and help me with it.
 * Dart has awesome **string interpolation**, I want to leverage that!
 * I like build_runner and code generation.
 * I love the name. i69n is hilarious.
@@ -49,15 +62,15 @@ Write your translations into other YAML files:
 
     ExampleMessages m = ExampleMessages();
     print(m.generic.ok);
-    print(m.generic.done);
+    print(m.generic.done); // output: DONE
+    
+    m = ExampleMessages_cs();
+    print(m.generic.done); // output: Hotovo
     
 ## Parameters and pluralization
 
-The implementation is VERY straightforward, which allows you to do a lot of crazy stuff:
+The implementation is VERY straightforward, but that allows you to do a lot of crazy stuff:
 
-    generic:
-      ok: OK
-      done: DONE
     invoice:
       create: Create invoice
       delete: Delete invoice
@@ -69,29 +82,14 @@ The implementation is VERY straightforward, which allows you to do a lot of craz
       _apples(int cnt): "${_plural(cnt, one:'apple', many:'apples')}"
       count(int cnt): "You have eaten $cnt ${_apples(cnt)}."
       
-Maybe it will help, if I show you the generated classes: 
+Now see the generated classes: 
 
     class ExampleMessages {
         const ExampleMessages();
-        GenericExampleMessages get generic => GenericExampleMessages(this);
+        InvoiceExampleMessages get invoice => InvoiceExampleMessages(this);        
         ApplesExampleMessages get apples => ApplesExampleMessages(this);
-        InvoiceExampleMessages get invoice => InvoiceExampleMessages(this);
     }
-    
-    class GenericExampleMessages {
-        final ExampleMessages _parent;
-        const GenericExampleMessages(this._parent);
-        String get ok => "OK";
-        String get done => "DONE";
-    }
-    
-    class ApplesExampleMessages {
-        final ExampleMessages _parent;
-        const ApplesExampleMessages(this._parent);
-        String _apples(int cnt) => "${_plural(cnt, one:'apple', many:'apples')}";
-        String count(int cnt) => "You have eaten $cnt ${_apples(cnt)}.";
-    }
-    
+        
     class InvoiceExampleMessages {
         final ExampleMessages _parent;
         const InvoiceExampleMessages(this._parent);
@@ -99,12 +97,53 @@ Maybe it will help, if I show you the generated classes:
         String get help => "Use this function to generate new invoices and stuff. Awesome!";
         String get delete => "Delete invoice";
         String count(int cnt) => "You have created $cnt ${_plural(cnt, one:'invoice', many:'invoices')}.";
-    } 
+    }
     
-See how you can reuse the pluralization of `_apples(int cnt)`. (nice!)
+    class ApplesExampleMessages {
+        final ExampleMessages _parent;
+        const ApplesExampleMessages(this._parent);
+        String _apples(int cnt) => "${_plural(cnt, one:'apple', many:'apples')}";
+        String count(int cnt) => "You have eaten $cnt ${_apples(cnt)}.";
+    }         
+    
+See how you can reuse the pluralization of `_apples(int cnt)`? (nice!)
+
+There are three functions you can use in your message:
+
+    String _plural(int count, {String zero, String one, String two, String few, String many, String other})
+
+    String _cardinal(int count, {String zero, String one, String two, String few, String many, String other})
+
+    String _ordinal(int count, {String zero, String one, String two, String few, String many, String other})
+
+`_plural` and `_cardinal` do the same. I just felt that `_plural`
+ is a little bit less scary name :-)
+
+We need only two forms of the word apple in English. Apple and apples. But in Czech:
+
+    apples:
+      _apples(int cnt): "${_plural(cnt, one:'jablko', few: 'jablka', many:'jablek')}"
+ 
+See also:
+
+* http://cldr.unicode.org/index/cldr-spec/plural-rules
+* https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html
+
+## Custom pluralization
+
+The package can correctly decide between 'one', 'few', 'many', etc. only for
+English and Czech (for now). But you can easily plug your own language,
+see [example/main.dart](example/main.dart)
+and [Czech](lib/src/cs.dart) and [English](lib/src/en.dart)
+implementation.
+
+If you implement support for your language, please let me know,
+ I'll gladly embed it into the package. 
+
+## How to use generated classes
 
 How to decide what translation to use (ExampleMessages_cs?, ExampleMessages_hu?) **is up to you**.
-The package simply generates message objects, that's all.
+The package simply generates message classes, that's all.
 
     import 'exampleMessages.i69n.dart';
     import 'exampleMessages_cs.i69n.dart' deferred as cs;
@@ -121,23 +160,13 @@ The package simply generates message objects, that's all.
       print(m.apples.count(2));
       print(m.apples.count(5));
     
-    }
-    
+    }    
                       
 Where and how to store instances of these message classes - 
 again, **up to you**. I would consider ScopedModel for Flutter and registering
-messages instance into dependency injection in AngularDart, but that's just me.
+messages instance into dependency injection in AngularDart.
 
-## Custom pluralization
-
-The package can correctly decide between 'one', 'few', 'many', etc. only for English and Czech (for now).
-But you can easily plug your own language, see [example/index.dart](example/index.dart).
-If your implement support for your language, please let me know, I'll gladly embed it into the package. 
-
-See also:
-
-* http://cldr.unicode.org/index/cldr-spec/plural-rules
-* https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html
+But in this case a singleton would be acceptable also.
 
 ## How to use with Flutter
 
@@ -158,7 +187,7 @@ Add `build_runner` as a dev_dependency and `i69n` as a dependency to `pubspec.ya
       flutter_test:
         sdk: flutter
  
-Open a terminal and in a root of your Flutter project run:
+Open a terminal and in the root of your Flutter project run:
 
     flutter packages pub run build_runner watch
     
@@ -169,9 +198,9 @@ For one-time rebuild of messages run:
 
     flutter packages pub run build_runner build
    
-Then import generated messages and use them:
+Import generated messages and use them:
 
-    import '/messages/foo.i69n.dart'
+    import 'messages/foo.i69n.dart'
     
     ...
     
@@ -182,8 +211,7 @@ Then import generated messages and use them:
 ## How to use with AngularDart
 
 You are probably using `webdev` tool already, so you just need to add `i69n`
- as a dependency and that's all.             
-
+ as a dependency and that's all.              
 
 ## TODO
 
