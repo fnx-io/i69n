@@ -1,9 +1,3 @@
-button:
-  save: Save
-  load: Load
-users:
-  welcome(String name): "Hello $name!"
-  logout: logout
 generic:
   ok: OK
   done: DONE
