@@ -3,7 +3,9 @@ Simple internationalization package for Dart and Flutter.
 # Overview
 
 Write your messages into YAML files, and let this package generate
-a Dart objects from those files. Turn this **YAML** file:
+convenient Dart classes from those files.
+
+Turn this **YAML** file:
 
     lib/exampleMessages.i69n.yaml
     
@@ -40,8 +42,9 @@ Into these **generated** Dart classes:
     print(m.users.welcome('World'));
     // outputs: Hello World!
 
-Package is an extension (custom builder) for [https://pub.dartlang.org/packages/build_runner](https://pub.dartlang.org/packages/build_runner),
-Dart standard for source generation and it can be used with Flutter, AngularDart or any other type of Dart application.
+Package is an extension (custom builder) for [build_runner](https://pub.dartlang.org/packages/build_runner)
+(Dart standard for source generation) and it can be used with Flutter, AngularDart
+or any other type of Dart project.
 
 # i69n: 51 points simpler than your standard i18n!
 
@@ -49,7 +52,7 @@ Dart standard for source generation and it can be used with Flutter, AngularDart
 
 * The official Dart/Flutter approach to i18n seems to be ... complicated and kind of ... heavyweight.
 * I would like my messages to be **checked during compile time**. Is that message really there?
-* Key to the localized message should not be just some arbitrary String, it should be a **getter method**!
+* Key to the localized message shouldn't be just some arbitrary String, it should be a **getter method**!
 * And if the message takes some **parameters**, the method should take those parameters! 
 * I like to bundle messages into thematic groups, the i18n tool should support that and help me with it.
 * Dart has awesome **string interpolation**, I want to leverage that!
@@ -92,7 +95,7 @@ Write your translations into other YAML files:
     
 ## Parameters and pluralization
 
-The implementation is VERY straightforward, which that allows you to do all sorts of crazy stuff:
+The implementation is VERY straightforward, which allows you to do all sorts of crazy stuff:
 
     invoice:
       create: Create invoice
@@ -142,7 +145,8 @@ There are three functions you can use in your message:
 `_plural` and `_cardinal` do the same. I just felt that `_plural`
  is a little bit less scary name :-)
 
-We need only two forms of the word apple in English. Apple (one) and apples (many). But in Czech:
+We need only two forms of the word "apple" in English. "Apple" (one) and "apples" (many).
+But in Czech, we need three:
 
     apples:
       _apples(int cnt): "${_plural(cnt, one:'jablko', few: 'jablka', many:'jablek')}"
@@ -211,7 +215,7 @@ For one-time (re)build of your messages run:
    
 Import generated messages and use them:
 
-    import 'messages/foo.i69n.dart'
+    import 'packages:my_app/messages/foo.i69n.dart'
     
     ...
     
@@ -222,7 +226,7 @@ Import generated messages and use them:
 ## How to use with AngularDart
 
 You are probably using `webdev` tool already, so you just need to add `i69n`
- as a dependency and that's all. See `example`.          
+ as a dependency and **that's all**.          
 
 ## Custom pluralization
 
