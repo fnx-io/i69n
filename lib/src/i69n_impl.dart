@@ -16,7 +16,7 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
 
   StringBuffer output = new StringBuffer();
 
-  output.writeln("// GENERATED FILE (${new DateTime.now()}), do not edit!");
+  output.writeln("// GENERATED FILE, do not edit!");
   output.writeln("import 'package:i69n/i69n.dart' as i69n;");
   if (meta.defaultFileName != null) {
     output.writeln("import '${meta.defaultFileName}';");
