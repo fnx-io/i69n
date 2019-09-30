@@ -1,3 +1,9 @@
+## 0.2.0
+
+- Upgrade to Dart 2.5.1 and build_runner 1.7.1
+- added possibility to access messages with string keys, not only Dart identifiers (i.e. `m['generic.ok']`)
+- output is formatted with Dartfmt  
+
 ## 0.1.0
 
 - Seems good, let's move up

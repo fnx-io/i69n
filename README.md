@@ -132,7 +132,7 @@ Now see the generated classes:
         String count(int cnt) => "You have eaten $cnt ${_apples(cnt)}.";
     }         
     
-See how you can **reuse** the pluralization of `_apples(int cnt)`? (nice!)
+See how you can **reuse** the pluralization of `_apples(int cnt)`? 💯!!!
 
 There are three functions you can use in your message:
 
@@ -143,7 +143,7 @@ There are three functions you can use in your message:
     String _ordinal(int count, {String zero, String one, String two, String few, String many, String other})
 
 `_plural` and `_cardinal` do the same. I just felt that `_plural`
- is a little bit less scary name :-)
+ is a little bit less scary name and in most cases that's the one you need.
 
 We need only two forms of the word "apple" in English. "Apple" (one) and "apples" (many).
 But in Czech, we need three:
@@ -182,6 +182,20 @@ again, **up to you**. I would consider ScopedModel for Flutter and registering
 messages instance into dependency injection in AngularDart.
 
 But in this case a singleton would be acceptable also.
+
+## Dynamic access using String keys
+
+It's still useful to access your messages using the String keys in some cases. For example when the key
+of the message is composed dynamically at runtime, maybe like this:
+
+    var vehicleTypeMessageKey = "VehicleType.${data['type']'}";
+ 
+You can access your messages like this:
+
+    print("static:  "+m.generic.ok);
+    print("dynamic: "+m.generic['ok']);
+    print("or even: "+m['generic.ok']);
+     
 
 ## How to use with Flutter
 

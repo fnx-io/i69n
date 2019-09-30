@@ -11,6 +11,10 @@ enum QuantityCategory { zero, one, two, few, many, other }
 
 enum QuantityType { cardinal, ordinal }
 
+abstract class I69nMessageBundle {
+  Object operator [](String messageKey);
+}
+
 void registerResolver(String languageCode, CategoryResolver resolver) {
   _resolverRegistry[languageCode] = resolver;
 }
@@ -18,43 +22,22 @@ void registerResolver(String languageCode, CategoryResolver resolver) {
 ///
 /// Same as ordinal.
 ///
-String plural(int count, String languageCode,
-    {String zero,
-    String one,
-    String two,
-    String few,
-    String many,
-    String other}) {
-  return _resolvePlural(count, languageCode, QuantityType.cardinal,
-      zero: zero, one: one, two: two, few: few, many: many, other: other);
+String plural(int count, String languageCode, {String zero, String one, String two, String few, String many, String other}) {
+  return _resolvePlural(count, languageCode, QuantityType.cardinal, zero: zero, one: one, two: two, few: few, many: many, other: other);
 }
 
 ///
 /// See: http://cldr.unicode.org/index/cldr-spec/plural-rules
 ///
-String cardinal(int count, String languageCode,
-    {String zero,
-    String one,
-    String two,
-    String few,
-    String many,
-    String other}) {
-  return _resolvePlural(count, languageCode, QuantityType.cardinal,
-      zero: zero, one: one, two: two, few: few, many: many, other: other);
+String cardinal(int count, String languageCode, {String zero, String one, String two, String few, String many, String other}) {
+  return _resolvePlural(count, languageCode, QuantityType.cardinal, zero: zero, one: one, two: two, few: few, many: many, other: other);
 }
 
 ///
 /// See: http://cldr.unicode.org/index/cldr-spec/plural-rules
 ///
-String ordinal(int count, String languageCode,
-    {String zero,
-    String one,
-    String two,
-    String few,
-    String many,
-    String other}) {
-  return _resolvePlural(count, languageCode, QuantityType.ordinal,
-      zero: zero, one: one, two: two, few: few, many: many, other: other);
+String ordinal(int count, String languageCode, {String zero, String one, String two, String few, String many, String other}) {
+  return _resolvePlural(count, languageCode, QuantityType.ordinal, zero: zero, one: one, two: two, few: few, many: many, other: other);
 }
 
 Map<String, CategoryResolver> _resolverRegistry = {
@@ -62,13 +45,7 @@ Map<String, CategoryResolver> _resolverRegistry = {
   "cs": cs.quantityResolver,
 };
 
-String _resolvePlural(int count, String languageCode, QuantityType type,
-    {String zero,
-    String one,
-    String two,
-    String few,
-    String many,
-    String other}) {
+String _resolvePlural(int count, String languageCode, QuantityType type, {String zero, String one, String two, String few, String many, String other}) {
   QuantityCategory c = _resolveCategory(languageCode, count, type);
   if (c == null) c = QuantityCategory.other;
   if (many == null) many = other;
@@ -105,8 +82,7 @@ QuantityCategory _defaultResolver(int count, QuantityType type) {
   return QuantityCategory.other;
 }
 
-QuantityCategory _resolveCategory(
-    String languageCode, int count, QuantityType type) {
+QuantityCategory _resolveCategory(String languageCode, int count, QuantityType type) {
   if (count == null) return QuantityCategory.other;
   CategoryResolver resolver;
   if (languageCode != null) {
