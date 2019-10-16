@@ -1,6 +1,6 @@
 name: i69n
 description: Simple internationalization tool for Dart and Flutter, based on YAML files and source generation.
-version: 0.2.0
+version: 0.3.0
 homepage: https://github.com/fnx-io/i69n
 author: Tomas Zverina <t@fnx.io>
 
@@ -12,7 +12,7 @@ dependencies:
   # Not imported in code, but used to constrain `build.yaml` requirements
   build_config: ^0.4.1
   yaml: ^2.2.0
-  dart_style: 1.3.1
+  dart_style: ">=1.2.0"
 
 dev_dependencies:
   pedantic: ^1.8.0

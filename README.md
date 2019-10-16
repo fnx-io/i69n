@@ -1,4 +1,4 @@
-Simple internationalization package for Dart and Flutter.
+Simple internationalization (i18n) package for Dart and Flutter, with support 
 
 # Overview
 

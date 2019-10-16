@@ -1,3 +1,7 @@
+## 0.3.0
+
+- more benevolent dependencies (for web use angular: 5.3.1)
+
 ## 0.2.0
 
 - Upgrade to Dart 2.5.1 and build_runner 1.7.1
