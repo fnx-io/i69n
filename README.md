@@ -4,7 +4,8 @@ Supports:
 - AngularDart
 - Flutter hot reload
 - pedantic
-- ...
+
+[![Build Status](https://travis-ci.org/fnx-io/i69n.svg?branch=master)](https://travis-ci.org/fnx-io/i69n)
 
 # Overview
 
