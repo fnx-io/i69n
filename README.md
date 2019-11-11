@@ -1,4 +1,10 @@
-Simple internationalization (i18n) package for Dart and Flutter, with support 
+Simple internationalization (i18n) package for Dart and Flutter. 
+
+Supports:
+- AngularDart
+- Flutter hot reload
+- pedantic
+- ...
 
 # Overview
 
@@ -255,8 +261,6 @@ If you implement support for your language, please let me know,
  
 # TODO
 
-* More detailed docs.
-* Use it in some of our projects for real.
 * Current limitation: default language must be english
 * TODO: support custom imports 
 

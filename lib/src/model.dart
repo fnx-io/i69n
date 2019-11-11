@@ -10,7 +10,7 @@ class ClassMeta {
   String languageCode;
 
   ClassMeta nest(String namePrefix) {
-    ClassMeta result = new ClassMeta();
+    ClassMeta result = ClassMeta();
     result.parent = this;
     result.isDefault = isDefault;
     result.defaultObjectName = "${namePrefix}${defaultObjectName}";

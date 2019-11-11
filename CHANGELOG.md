@@ -1,3 +1,7 @@
+## 0.4.0
+
+- pedantic friendly - both project source files and generated messages
+
 ## 0.3.0
 
 - more benevolent dependencies (for web use angular: 5.3.1)
