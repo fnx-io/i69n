@@ -10,11 +10,11 @@ class ClassMeta {
   String languageCode;
 
   ClassMeta nest(String namePrefix) {
-    ClassMeta result = ClassMeta();
+    var result = ClassMeta();
     result.parent = this;
     result.isDefault = isDefault;
-    result.defaultObjectName = "${namePrefix}${defaultObjectName}";
-    result.objectName = "${namePrefix}${objectName}";
+    result.defaultObjectName = '${namePrefix}${defaultObjectName}';
+    result.objectName = '${namePrefix}${objectName}';
     result.localeName = localeName;
     result.languageCode = languageCode;
     return result;

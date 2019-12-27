@@ -1,16 +1,17 @@
-Simple internationalization (i18n) package for Dart and Flutter. 
+Simple internationalization (i18n) package for Dart and Flutter.
+
+[![Build Status](https://travis-ci.org/fnx-io/i69n.svg?branch=master)](https://travis-ci.org/fnx-io/i69n)
+[![pub package](https://img.shields.io/badge/pub.dev-i69n-brightgreen)](https://pub.dev/packages/i69n)
+[![open source](https://img.shields.io/badge/Github-i69n-brightgreen)](https://github.com/fnx-io/i69n)
 
 Supports:
 - AngularDart
 - Flutter hot reload
-- pedantic
+- deferred loading of translations
 
-[![Build Status](https://travis-ci.org/fnx-io/i69n.svg?branch=master)](https://travis-ci.org/fnx-io/i69n)
+
 
 # Overview
-
-Write your messages into YAML files, and let this package generate
-convenient Dart classes from those files.
 
 Turn this **YAML** file:
 
@@ -78,7 +79,6 @@ Write your messages into a YAML file:
     invoice:
       create: Create invoice
       delete: Delete invoice
-  
   
 Write your translations into other YAML files:
 
@@ -263,7 +263,7 @@ If you implement support for your language, please let me know,
 # TODO
 
 * Current limitation: default language must be english
-* TODO: support custom imports 
+* TODO: support custom imports
 
 # Example
 

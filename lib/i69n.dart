@@ -5,7 +5,8 @@ import 'src/en.dart' as en;
 /// Language specific function, which is provided with a number and should return one of possible categories.
 /// count is never null.
 ///
-typedef QuantityCategory CategoryResolver(int count, QuantityType type);
+typedef CategoryResolver = QuantityCategory Function(
+    int count, QuantityType type);
 
 enum QuantityCategory { zero, one, two, few, many, other }
 
@@ -62,8 +63,8 @@ String ordinal(int count, String languageCode,
 }
 
 Map<String, CategoryResolver> _resolverRegistry = {
-  "en": en.quantityResolver,
-  "cs": cs.quantityResolver,
+  'en': en.quantityResolver,
+  'cs': cs.quantityResolver,
 };
 
 String _resolvePlural(int count, String languageCode, QuantityType type,
@@ -73,9 +74,9 @@ String _resolvePlural(int count, String languageCode, QuantityType type,
     String few,
     String many,
     String other}) {
-  QuantityCategory c = _resolveCategory(languageCode, count, type);
-  if (c == null) c = QuantityCategory.other;
-  if (many == null) many = other;
+  var c = _resolveCategory(languageCode, count, type);
+  c ??= QuantityCategory.other;
+  many ??= other;
   switch (c) {
     case QuantityCategory.zero:
       return _firstNotNull(zero, many);
@@ -90,7 +91,7 @@ String _resolvePlural(int count, String languageCode, QuantityType type,
     case QuantityCategory.other:
       return _firstNotNull(other, many);
   }
-  return "???";
+  return '???';
 }
 
 QuantityCategory _defaultResolver(int count, QuantityType type) {
@@ -115,9 +116,7 @@ QuantityCategory _resolveCategory(
   CategoryResolver resolver;
   if (languageCode != null) {
     resolver = _resolverRegistry[languageCode];
-    if (resolver == null) {
-      resolver = _defaultResolver;
-    }
+    resolver ??= _defaultResolver;
   } else {
     resolver = _defaultResolver;
   }
@@ -127,5 +126,5 @@ QuantityCategory _resolveCategory(
 String _firstNotNull(String a, String b) {
   if (a != null) return a;
   if (b != null) return b;
-  return "???";
+  return '???';
 }

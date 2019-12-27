@@ -22,8 +22,8 @@ QuantityCategory _resolveCardinal(int count) {
 }
 
 QuantityCategory _resolveOrdinal(int count) {
-  int mod10 = count % 10;
-  int mod100 = count % 100;
+  var mod10 = count % 10;
+  var mod100 = count % 100;
   if (mod10 == 1 && mod100 != 11) return QuantityCategory.one;
   if (mod10 == 2 && mod100 != 12) return QuantityCategory.two;
   if (mod10 == 3 && mod100 != 13) return QuantityCategory.few;

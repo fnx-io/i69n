@@ -7,9 +7,9 @@ import 'exampleMessages.i69n.dart';
 import 'exampleMessages_cs.i69n.dart' deferred as cs;
 
 void main() async {
-  print("Hello from i69n!");
-  print("Some english:");
-  ExampleMessages m = ExampleMessages();
+  print('Hello from i69n!');
+  print('Some english:');
+  var m = ExampleMessages();
   print(m.generic.ok);
   print(m.generic.done);
   print(m.invoice.help);
@@ -17,9 +17,9 @@ void main() async {
   print(m.apples.count(2));
   print(m.apples.count(5));
 
-  print("Asynchronous load of Czech messages:");
+  print('Asynchronous load of Czech messages:');
   await cs.loadLibrary();
-  print("Some czech:");
+  print('Some czech:');
   m = cs.ExampleMessages_cs();
   print(m.generic.ok); // inherited from default
   print(m.generic.done);
@@ -28,13 +28,13 @@ void main() async {
   print(m.apples.count(2));
   print(m.apples.count(5));
 
-  print("Access messages at runtime, with plain old string keys");
-  print("Static:  " + m.generic.ok);
-  print("Dynamic: " + m.generic['ok']);
-  print("Or even: " + m['generic.ok']);
+  print('Access messages at runtime, with plain old string keys');
+  print('Static:  ' + m.generic.ok);
+  print('Dynamic: ' + m.generic['ok']);
+  print('Or even: ' + m['generic.ok']);
 
   // Override plurals for Czech or register support for your own language:
-  i69n.registerResolver("cs", (int count, i69n.QuantityType type) {
+  i69n.registerResolver('cs', (int count, i69n.QuantityType type) {
     if (type == i69n.QuantityType.cardinal && count == 1)
       return i69n.QuantityCategory.one;
     return i69n.QuantityCategory.other;

@@ -19,7 +19,7 @@ class YamlBasedBuilder implements Builder {
     var objectName = generateMessageObjectName(inputId.pathSegments.last);
     var dartContent = generateDartContentFromYaml(objectName, contents);
 
-    var copy = inputId.changeExtension(".dart");
+    var copy = inputId.changeExtension('.dart');
 
     // Write out the new asset.
     await buildStep.writeAsString(copy, dartContent);
@@ -27,6 +27,6 @@ class YamlBasedBuilder implements Builder {
 
   @override
   final buildExtensions = const {
-    ".i69n.yaml": [".i69n.dart"]
+    '.i69n.yaml': ['.i69n.dart']
   };
 }

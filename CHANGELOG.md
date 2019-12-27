@@ -1,3 +1,7 @@
+## 0.5.0
+
+- even more pedantic friendly - resolved all warnings
+
 ## 0.4.0
 
 - pedantic friendly - both project source files and generated messages
