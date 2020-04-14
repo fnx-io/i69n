@@ -8,8 +8,9 @@ Supports:
 - AngularDart
 - Flutter hot reload
 - deferred loading of translations
+- social distancing
 
-
+(Migrating from < 1.0 to >= 1.0 ? See few notes at the very bottom of this page.) 
 
 # Overview
 
@@ -54,8 +55,6 @@ Package is an extension (custom builder) for [build_runner](https://pub.dartlang
 (Dart standard for source generation) and it can be used with Flutter, AngularDart
 or any other type of Dart project.
 
-# i69n: 51 points simpler than your standard i18n!
-
 ## Motivation and goals
 
 * The official Dart/Flutter approach to i18n seems to be ... complicated and kind of ... heavyweight.
@@ -67,39 +66,79 @@ or any other type of Dart project.
 * I like build_runner and code generation.
 * I love the name. i69n is hilarious.
 
-## Solution
-
-Write your messages into a YAML file:
-
-    exampleMessages.i69n.yaml (default messages):
+# i69n: 51 points simpler than your standard i18n!
     
-    generic:
-      ok: OK
-      done: DONE
-    invoice:
-      create: Create invoice
-      delete: Delete invoice
-  
-Write your translations into other YAML files:
+## How to use with Flutter
 
-    exampleMessages_cs.i69n.yaml (_cs = Czech translation)
+Create YAML file with your messages, for example:
+
+    lib/messages/foo.i69n.yaml
+    
+    generic:    
+      done: Done
+      ok: OK
+    invoice:
+      create: Create an invoice
+      delete: Delete this invoice    
+    
+Add translations for different languages:
+
+    lib/messages/foo_cs.i69n.yaml (_cs = Czech translation)
     
     generic:    
       done: Hotovo
+      # ok is the same and Foo_cs extends Foo.
     invoice:
       create: Vytvořit fakturu
       delete: Smazat fakturu
-  
-... run the `webdev` tool, or `build_runner` directly, and use your messages like this:
+    
+Add `build_runner` as a dev_dependency and `i69n` as a dependency to `pubspec.yaml`:
 
-    ExampleMessages m = ExampleMessages();
-    print(m.generic.ok); // output: OK
-    print(m.generic.done); // output: DONE
+    dependencies:
+      flutter:
+        sdk: flutter
+      i69n: any
+      ...
     
-    m = ExampleMessages_cs();
-    print(m.generic.ok); // output: OK
-    print(m.generic.done); // output: Hotovo
+    dev_dependencies:
+      build_runner: any
+      flutter_test:
+        sdk: flutter
+ 
+Open a terminal and in the root of your Flutter project run:
+
+    flutter packages pub run build_runner watch --delete-conflicting-outputs
     
+... and keep it running. Your message classes will appear next to YAML files and will be
+rebuilt automatically each time you change the source YAML.
+
+For one-time (re)build of your messages run:
+
+    flutter packages pub run build_runner build --delete-conflicting-outputs
+   
+Import generated messages and use them:
+
+    import 'packages:my_app/messages/foo.i69n.dart'
+    
+    ...
+    
+    Foo m = Foo();
+    return Text(m.bar);
+    ...
+    
+... or ...
+
+    import 'packages:my_app/messages/foo_cs.i69n.dart'
+    
+    Foo m = Foo_cs(); // Notice: Foo_cs extends Foo
+    return Text(m.bar);
+           
+    
+## How to use with AngularDart
+
+You are using `webdev` tool already, so you just need to add `i69n`
+ as a dependency and **that's all**.        
+      
 ## Parameters and pluralization
 
 The implementation is VERY straightforward, which allows you to do all sorts of crazy stuff:
@@ -139,7 +178,7 @@ Now see the generated classes:
         String count(int cnt) => "You have eaten $cnt ${_apples(cnt)}.";
     }         
     
-See how you can **reuse** the pluralization of `_apples(int cnt)`? 💯!!!
+See how you can **reuse** the pluralization of `_apples(int cnt)`? (!!!)
 
 There are three functions you can use in your message:
 
@@ -150,7 +189,7 @@ There are three functions you can use in your message:
     String _ordinal(int count, {String zero, String one, String two, String few, String many, String other})
 
 `_plural` and `_cardinal` do the same. I just felt that `_plural`
- is a little bit less scary name and in most cases that's the one you need.
+ sounds a little bit less scary and in most cases that's the one you need.
 
 We need only two forms of the word "apple" in English. "Apple" (one) and "apples" (many).
 But in Czech, we need three:
@@ -188,7 +227,9 @@ Where and how to store instances of these message classes -
 again, **up to you**. I would consider ScopedModel for Flutter and registering
 messages instance into dependency injection in AngularDart.
 
-But in this case a singleton would be acceptable also.
+But in this case a singleton would be acceptable also.     
+
+# Customization and speacial features
 
 ## Dynamic access using String keys
 
@@ -202,53 +243,49 @@ You can access your messages like this:
     print("static:  "+m.generic.ok);
     print("dynamic: "+m.generic['ok']);
     print("or even: "+m['generic.ok']);
+
+In some rare cases you might want to 'disable' this map generation (maybe to enable better tree-shaking of unused messages?).
+In such case use a simple flag 'nomap':
+
+    generic:
+      _i69n: nomap
+      done: Done
+      ok: OK             
+      
+No message in 'generic' message group will be accessible through the `[]` operator. Flag
+must be included in all translation files. Flag is NOT inherited into lower levels of messages
+(eq. generic.dialog.errors....).  
+
+## Escaping special characters
+
+i69n will try hard to escape your strings so that the generated source code is correct:
+
+    message: Let's go!
+    ...
+    String get message => 'Let\'s go!';    
+    
+But in some cases you might want to disabled this feature and
+escape special characters by hand. Use 'noescape' flag:
+
+    _i69n: noescape
+    message: Let's go!
+    ...
+    String get message => 'Let's go!';
      
+Without proper escaping, this will lead to compile time error.
+In this case you must escape your string in the source YAML by hand:
 
-## How to use with Flutter
-
-Create YAML file with your messages, for example:
-
-    lib/messages/foo.i69n.yaml
-
-Add `build_runner` as a dev_dependency and `i69n` as a dependency to `pubspec.yaml`:
-
-    dependencies:
-      flutter:
-        sdk: flutter
-      i69n: any
-      ...
-    
-    dev_dependencies:
-      build_runner: any
-      flutter_test:
-        sdk: flutter
- 
-Open a terminal and in the root of your Flutter project run:
-
-    flutter packages pub run build_runner watch
-    
-... and keep it running. Your message classes will appear next to YAML files and will be
-rebuilt automatically each time you change the source YAML.
-
-For one-time (re)build of your messages run:
-
-    flutter packages pub run build_runner build
-   
-Import generated messages and use them:
-
-    import 'packages:my_app/messages/foo.i69n.dart'
-    
+    _i69n: noescape    
+    message: Let\'s go!
     ...
+    String get message => 'Let\'s go!';    
     
-    Foo m = Foo();
-    return Text(m.bar);
-    ...
-    
-## How to use with AngularDart
+## More configuration flags
 
-You are probably using `webdev` tool already, so you just need to add `i69n`
- as a dependency and **that's all**.          
+So far only 'noescape' and 'nomap'. If you need both, separate them with comma.
 
+    _i69n: noescape,nomap            
+     
 ## Custom pluralization
 
 The package can correctly decide between 'one', 'few', 'many', etc. only for
@@ -258,7 +295,7 @@ and [Czech](lib/src/cs.dart) and [English](lib/src/en.dart)
 implementation.
 
 If you implement support for your language, please let me know,
- I'll gladly embed it into the package. 
+ I'll gladly embed it into the package: tomucha@gmail.com
  
 # TODO
 
@@ -280,3 +317,8 @@ Now open the browser http://localhost:8080/ and watch the dev tools console.
 # Credits
 
 Created by [https://fnx.io](https://fnx.io).
+
+# Migration
+
+## From < 1.0 to >= 1.0
+

@@ -31,11 +31,12 @@ class TodoItem {
   String get path => parent == null ? meta.languageCode : "${parent.path}.$prefix";
 
   bool hasFlag(String flag) {
-    return flags.contains(flag);
+    return (flags?.contains(flag) ?? false);
   }
 
   TodoItem(this.prefix, this.parent, this.meta, this.content) {
-    if (content != null && content['_i69n'] != null && content['_i69n'] is String) {
+    if (content != null && content['_i69n'] != null) {
+      if (content['_i69n'] is! String) throw Exception("Multiple flags in _i69n configuration message key must be comma separated");
       flags = (content['_i69n'] as String).split(",").map((f) => f.trim()).toSet();
     } else {
       flags = {};

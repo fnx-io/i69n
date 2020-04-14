@@ -59,7 +59,27 @@ void main() {
   });
 
   group('Dart rendering', () {
-    test('Short', () {
+    test('String escape', () {
+      expect(escapeDartString('qwertyuiop'), equals('qwertyuiop'));
+      expect(escapeDartString('1232456789'), equals('1232456789'));
+      expect(escapeDartString('+ěščřžýáí'), equals('+ěščřžýáí'));
+      expect(escapeDartString('ネヨフ囲人ト横執所職'), equals('ネヨフ囲人ト横執所職')); // Japanese
+      expect(escapeDartString('កើតមកមានសេរីភាព'), equals('កើតមកមានសេរីភាព')); // Khmer
+      expect(escapeDartString(r'$'), equals(r'$')); // does't escape dollar sign
+      expect(escapeDartString(r'"'), equals(r'"')); // does't escape "
+      expect(escapeDartString(r"'"), equals(r"\'")); // does escape '
+      expect(escapeDartString(r"\"), equals(r"\\")); // does escape '
+      expect(escapeDartString("\t"), equals(r"\t")); // does escape tab
+      expect(escapeDartString("\n"), equals(r"\n")); // does escape \n
+      expect(escapeDartString("""Multiline
+message"""), equals(r"Multiline\nmessage")); // handles multiline strings
+      expect(escapeDartString(r'${}'), equals(r'${}')); // doesn't escape inside ${...}
+      expect(escapeDartString(r'\${}'), equals(r'\\${}')); // does escape outside ${...}
+      expect(escapeDartString(r'${\}'), equals(r'${\}')); // doesn't escape inside ${...}
+      expect(escapeDartString(r'${\}\${\}'), equals(r'${\}\\${\}')); // doesn't escape inside ${...}
+    });
+
+    test('Generated source code', () {
       var root = ClassMeta();
       root.objectName = 'Test';
       root.defaultObjectName = 'Test';
@@ -67,16 +87,17 @@ void main() {
       root.languageCode = "en";
       var todoList = <TodoItem>[];
       var yaml = 'foo:\n'
-          '  subfoo: subbar\n'
+          '  subfoo: sub\'bar\n' // must me escaped
           '  subfoo2: subbar2\n'
           'other: maybe\n'
-          'or:\n'
+          'on: off\n'
+          'or:\n' // shouldn't have [] operator
           '  something:\n'
-          '    a: A\n'
+          '    _i69n: nomap,noescape\n'
+          '    a: A\\\'A\n' // inside 'noescape' flag, author must escape
           '    b: B\n'
           '    c: C\n'
           '  status:\n'
-          '    _i69n: map\n'
           '    name: not\n'
           '    name2: not2\n'
           '    name3: not3\n';
@@ -89,7 +110,11 @@ void main() {
         renderTodoItem(todo, output);
         output.writeln('');
       }
-      print(output);
+
+      String result = output.toString();
+      expect(result.contains("[] operator is disabled in en.or.something, see _i69n: nomap flag."), isTrue);
+      expect(result.contains(r"String get subfoo => 'sub\'bar';"), isTrue); // automatically escaped
+      expect(result.contains(r"String get a => 'A\'A';"), isTrue); // escaped by author
     });
   });
 }

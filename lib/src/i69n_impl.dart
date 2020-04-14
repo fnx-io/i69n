@@ -124,7 +124,7 @@ void renderTodoItemMapOperator(TodoItem todo, StringBuffer output) {
   output.writeln('\t\tif (index > 0) {');
   output.writeln('\t\t\treturn (this[key.substring(0,index)] as i69n.I69nMessageBundle)[key.substring(index+1)];');
   output.writeln('\t\t}');
-  if (todo.hasFlag("map")) {
+  if (!todo.hasFlag("nomap")) {
     output.writeln('\t\tswitch(key) {');
     todo.content.forEach((k, v) {
       if (!_reserved.contains(k)) {
@@ -142,12 +142,16 @@ void renderTodoItemMapOperator(TodoItem todo, StringBuffer output) {
     }
     output.writeln('\t\t}');
   } else {
-    output.writeln('\t\tthrow Exception(\'[] operator is not enabled in ${todo.path}, add _i69n: map flag.\');');
+    output.writeln('\t\tthrow Exception(\'[] operator is disabled in ${todo.path}, see _i69n: nomap flag.\');');
   }
   output.writeln('\t}');
 }
 
 void renderTodoItemProperties(TodoItem todo, StringBuffer output) {
+  var _escapeFunction = escapeDartString;
+  if (todo.hasFlag("noescape")) {
+    _escapeFunction = (String s) => s;
+  }
   todo.content.forEach((k, v) {
     if (v is YamlMap) {
       var prefix = _firstCharUpper(k);
@@ -156,12 +160,12 @@ void renderTodoItemProperties(TodoItem todo, StringBuffer output) {
     } else {
       if (k.contains('(')) {
         // function
-        output.writeln("\tString ${k} => '${v}';");
+        output.writeln("\tString ${k} => '${_escapeFunction(v)}';");
       } else {
         if (k.contains('.')) {
           throw Exception('Your message key cannot contain a dot, see $k');
         }
-        output.writeln("\tString get ${k} => '${v}';");
+        output.writeln("\tString get ${k} => '${_escapeFunction(v)}';");
       }
     }
   });
@@ -185,4 +189,59 @@ String _firstCharUpper(String s) {
 
 String _renderFileNameError(String name) {
   return 'Wrong file name: "$name"';
+}
+
+String escapeDartString(String string) {
+  if (string == null) {
+    return null;
+  }
+  if (string.isEmpty) {
+    return string;
+  }
+  var sb = StringBuffer();
+  var i = 0;
+
+  int _inside = 0;
+
+  for (var c in string.runes) {
+    if (c == 36 && _inside == 0) {
+      // $
+      _inside = 1;
+      sb.write(r'$');
+    } else if (c == 123 && _inside == 1) {
+      // {
+      _inside = 2;
+      sb.write(r'{');
+    } else if (c == 125 && _inside == 2) {
+      // }
+      _inside = 0;
+      sb.write(r'}');
+    } else if (_inside != 2) {
+      _inside = 0;
+      switch (c) {
+        case 9:
+          sb.write("\\t");
+          break;
+        case 10:
+          sb.write("\\n");
+          break;
+        case 13:
+          sb.write("\\r");
+          break;
+        case 39:
+          sb.write("\\\'");
+          break;
+        case 92:
+          sb.write(r'\\');
+          break;
+        default:
+          sb.write(string[i]);
+      }
+    } else {
+      // don't escape inside ${...} expression
+      sb.write(string[i]);
+    }
+    i++;
+  }
+  return sb.toString();
 }
