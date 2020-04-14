@@ -1,4 +1,5 @@
 generic:
+  _i69n: flag
   ok: OK
   done: DONE
 invoice:

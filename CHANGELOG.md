@@ -1,3 +1,8 @@
+## 1.0.0
+
+- possibility to customize generator behaviour with flags 
+- map operator is now generated only for objects with 'map' flag 
+
 ## 0.5.0
 
 - even more pedantic friendly - resolved all warnings

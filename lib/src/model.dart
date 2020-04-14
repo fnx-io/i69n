@@ -23,7 +23,22 @@ class ClassMeta {
 
 class TodoItem {
   ClassMeta meta;
+  Set<String> flags;
   YamlMap content;
+  TodoItem parent;
+  String prefix;
 
-  TodoItem(this.meta, this.content);
+  String get path => parent == null ? meta.languageCode : "${parent.path}.$prefix";
+
+  bool hasFlag(String flag) {
+    return flags.contains(flag);
+  }
+
+  TodoItem(this.prefix, this.parent, this.meta, this.content) {
+    if (content != null && content['_i69n'] != null && content['_i69n'] is String) {
+      flags = (content['_i69n'] as String).split(",").map((f) => f.trim()).toSet();
+    } else {
+      flags = {};
+    }
+  }
 }

@@ -1,7 +1,7 @@
 library i69n;
 
-import 'package:yaml/yaml.dart';
 import 'package:dart_style/dart_style.dart';
+import 'package:yaml/yaml.dart';
 
 part 'model.dart';
 
@@ -13,12 +13,11 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
 
   var todoList = <TodoItem>[];
 
-  prepareTodoList(todoList, messages, meta);
+  prepareTodoList(null, null, todoList, messages, meta);
 
   var output = StringBuffer();
 
-  output.writeln(
-      '// ignore_for_file: unused_element, unused_field, camel_case_types, annotate_overrides');
+  output.writeln('// ignore_for_file: unused_element, unused_field, camel_case_types, annotate_overrides');
   output.writeln('// GENERATED FILE, do not edit!');
   output.writeln('import \'package:i69n/i69n.dart\' as i69n;');
   if (meta.defaultFileName != null) {
@@ -28,18 +27,12 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
   output.writeln('String get _languageCode => \'${meta.languageCode}\';');
   output.writeln('String get _localeName => \'${meta.localeName}\';');
   output.writeln('');
-  output.writeln(
-      'String _plural(int count, {String zero, String one, String two, String few, String many, String other}) =>');
-  output.writeln(
-      '\ti69n.plural(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
-  output.writeln(
-      'String _ordinal(int count, {String zero, String one, String two, String few, String many, String other}) =>');
-  output.writeln(
-      '\ti69n.ordinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
-  output.writeln(
-      'String _cardinal(int count, {String zero, String one, String two, String few, String many, String other}) =>');
-  output.writeln(
-      '\ti69n.cardinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
+  output.writeln('String _plural(int count, {String zero, String one, String two, String few, String many, String other}) =>');
+  output.writeln('\ti69n.plural(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
+  output.writeln('String _ordinal(int count, {String zero, String one, String two, String few, String many, String other}) =>');
+  output.writeln('\ti69n.ordinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
+  output.writeln('String _cardinal(int count, {String zero, String one, String two, String few, String many, String other}) =>');
+  output.writeln('\ti69n.cardinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
   output.writeln('');
 
   for (var todo in todoList) {
@@ -78,8 +71,7 @@ ClassMeta generateMessageObjectName(String fileName) {
     if (nameParts.length >= 2) {
       var languageCode = nameParts[1];
       if (twoCharsLower.allMatches(languageCode).length != 1) {
-        throw Exception(
-            'Wrong language code $languageCode in file name $fileName. Language code must match $twoCharsLower');
+        throw Exception('Wrong language code $languageCode in file name $fileName. Language code must match $twoCharsLower');
       }
       result.languageCode = languageCode;
       result.localeName = languageCode;
@@ -87,8 +79,7 @@ ClassMeta generateMessageObjectName(String fileName) {
     if (nameParts.length == 3) {
       var countryCode = nameParts[2];
       if (twoCharsUpper.allMatches(countryCode).length != 1) {
-        throw Exception(
-            'Wrong country code $countryCode in file name $fileName. Country code must match $twoCharsUpper');
+        throw Exception('Wrong country code $countryCode in file name $fileName. Country code must match $twoCharsUpper');
       }
       result.localeName = '${result.languageCode}_${countryCode}';
     }
@@ -100,12 +91,11 @@ ClassMeta generateMessageObjectName(String fileName) {
 void renderTodoItem(TodoItem todo, StringBuffer output) {
   var meta = todo.meta;
   var content = todo.content;
+
   if (meta.isDefault) {
-    output.writeln(
-        'class ${meta.objectName} implements i69n.I69nMessageBundle {');
+    output.writeln('class ${meta.objectName} implements i69n.I69nMessageBundle {');
   } else {
-    output.writeln(
-        'class ${meta.objectName} extends ${meta.defaultObjectName} {');
+    output.writeln('class ${meta.objectName} extends ${meta.defaultObjectName} {');
   }
 
   if (meta.parent == null) {
@@ -115,16 +105,54 @@ void renderTodoItem(TodoItem todo, StringBuffer output) {
     if (meta.isDefault) {
       output.writeln('\tconst ${meta.objectName}(this._parent);');
     } else {
-      output
-          .writeln('\tconst ${meta.objectName}(this._parent):super(_parent);');
+      output.writeln('\tconst ${meta.objectName}(this._parent):super(_parent);');
     }
   }
-  content.forEach((k, v) {
+
+  renderTodoItemProperties(todo, output);
+
+  renderTodoItemMapOperator(todo, output);
+
+  output.writeln('}');
+}
+
+const _reserved = {"_i69n"};
+
+void renderTodoItemMapOperator(TodoItem todo, StringBuffer output) {
+  output.writeln('\tObject operator[](String key) {');
+  output.writeln('\t\tvar index = key.indexOf(\'.\');');
+  output.writeln('\t\tif (index > 0) {');
+  output.writeln('\t\t\treturn (this[key.substring(0,index)] as i69n.I69nMessageBundle)[key.substring(index+1)];');
+  output.writeln('\t\t}');
+  if (todo.hasFlag("map")) {
+    output.writeln('\t\tswitch(key) {');
+    todo.content.forEach((k, v) {
+      if (!_reserved.contains(k)) {
+        String key = k;
+        if (key.contains('(')) {
+          key = key.substring(0, key.indexOf('('));
+        }
+        output.writeln('\t\t\tcase \'$key\': return $key;');
+      }
+    });
+    if (todo.meta.isDefault) {
+      output.writeln('\t\t\tdefault: throw Exception(\'Message \$key doesn\\\'t exist in \$this\');');
+    } else {
+      output.writeln('\t\t\tdefault: return super[key];');
+    }
+    output.writeln('\t\t}');
+  } else {
+    output.writeln('\t\tthrow Exception(\'[] operator is not enabled in ${todo.path}, add _i69n: map flag.\');');
+  }
+  output.writeln('\t}');
+}
+
+void renderTodoItemProperties(TodoItem todo, StringBuffer output) {
+  todo.content.forEach((k, v) {
     if (v is YamlMap) {
       var prefix = _firstCharUpper(k);
-      var child = meta.nest(prefix);
-      output.writeln(
-          '\t${child.objectName} get ${k} => ${child.objectName}(this);');
+      var child = todo.meta.nest(prefix);
+      output.writeln('\t${child.objectName} get ${k} => ${child.objectName}(this);');
     } else {
       if (k.contains('(')) {
         // function
@@ -137,41 +165,16 @@ void renderTodoItem(TodoItem todo, StringBuffer output) {
       }
     }
   });
-  output.writeln('\tObject operator[](String key) {');
-  output.writeln('\t\tvar index = key.indexOf(\'.\');');
-  output.writeln('\t\tif (index > 0) {');
-  output.writeln(
-      '\t\t\treturn (this[key.substring(0,index)] as i69n.I69nMessageBundle)[key.substring(index+1)];');
-  output.writeln('\t\t}');
-  output.writeln('\t\tswitch(key) {');
-  content.forEach((k, v) {
-    String key = k;
-    if (key.contains('(')) {
-      key = key.substring(0, key.indexOf('('));
-    }
-    output.writeln('\t\t\tcase \'$key\': return $key;');
-  });
-  if (meta.isDefault) {
-    output.writeln(
-        '\t\t\tdefault: throw Exception(\'Message \$key doesn\\\'t exist in \$this\');');
-  } else {
-    output.writeln('\t\t\tdefault: return super[key];');
-  }
-  output.writeln('\t\t}');
-  output.writeln('\t}');
-
-  output.writeln('}');
 }
 
-void prepareTodoList(
-    List<TodoItem> todoList, YamlMap messages, ClassMeta name) {
-  var todo = TodoItem(name, messages);
+void prepareTodoList(String prefix, TodoItem parent, List<TodoItem> todoList, YamlMap messages, ClassMeta name) {
+  var todo = TodoItem(prefix, parent, name, messages);
   todoList.add(todo);
 
   messages.forEach((k, v) {
     if (v is YamlMap) {
       var prefix = _firstCharUpper(k);
-      prepareTodoList(todoList, v, name.nest(prefix));
+      prepareTodoList(k, todo, todoList, v, name.nest(prefix));
     }
   });
 }
