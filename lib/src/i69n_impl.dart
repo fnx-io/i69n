@@ -231,9 +231,9 @@ String escapeDartString(String string) {
         case 39:
           sb.write("\\\'");
           break;
-        case 92:
+/*        case 92:
           sb.write(r'\\');
-          break;
+          break;*/
         default:
           sb.write(string[i]);
       }

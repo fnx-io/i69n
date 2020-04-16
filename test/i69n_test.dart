@@ -68,15 +68,17 @@ void main() {
       expect(escapeDartString(r'$'), equals(r'$')); // does't escape dollar sign
       expect(escapeDartString(r'"'), equals(r'"')); // does't escape "
       expect(escapeDartString(r"'"), equals(r"\'")); // does escape '
-      expect(escapeDartString(r"\"), equals(r"\\")); // does escape '
+      expect(escapeDartString(r"\"), equals(r"\")); // doesn't escape \
       expect(escapeDartString("\t"), equals(r"\t")); // does escape tab
       expect(escapeDartString("\n"), equals(r"\n")); // does escape \n
       expect(escapeDartString("""Multiline
 message"""), equals(r"Multiline\nmessage")); // handles multiline strings
-      expect(escapeDartString(r'${}'), equals(r'${}')); // doesn't escape inside ${...}
-      expect(escapeDartString(r'\${}'), equals(r'\\${}')); // does escape outside ${...}
-      expect(escapeDartString(r'${\}'), equals(r'${\}')); // doesn't escape inside ${...}
-      expect(escapeDartString(r'${\}\${\}'), equals(r'${\}\\${\}')); // doesn't escape inside ${...}
+      expect(escapeDartString(r"'${}"), equals(r"\'${}")); // does escape outside of ${...}
+      expect(escapeDartString(r"${}'"), equals(r"${}\'")); // does escape outside of ${...}
+      expect(escapeDartString(r"${'}"), equals(r"${'}")); // doesn't escape inside ${...}
+      expect(escapeDartString(r"${'}'${'}"), equals(r"${'}\'${'}")); // doesn't escape inside ${...}
+      expect(escapeDartString(r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY"),
+          equals(r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY")); // doesn't escape inside ${...}
     });
 
     test('Generated source code', () {
