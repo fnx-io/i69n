@@ -5,8 +5,7 @@ import 'src/en.dart' as en;
 /// Language specific function, which is provided with a number and should return one of possible categories.
 /// count is never null.
 ///
-typedef CategoryResolver = QuantityCategory Function(
-    int count, QuantityType type);
+typedef CategoryResolver = QuantityCategory Function(int count, QuantityType type);
 
 enum QuantityCategory { zero, one, two, few, many, other }
 
@@ -23,43 +22,22 @@ void registerResolver(String languageCode, CategoryResolver resolver) {
 ///
 /// Same as ordinal.
 ///
-String plural(int count, String languageCode,
-    {String zero,
-    String one,
-    String two,
-    String few,
-    String many,
-    String other}) {
-  return _resolvePlural(count, languageCode, QuantityType.cardinal,
-      zero: zero, one: one, two: two, few: few, many: many, other: other);
+String plural(int count, String languageCode, {String zero, String one, String two, String few, String many, String other}) {
+  return _resolvePlural(count, languageCode, QuantityType.cardinal, zero: zero, one: one, two: two, few: few, many: many, other: other);
 }
 
 ///
 /// See: http://cldr.unicode.org/index/cldr-spec/plural-rules
 ///
-String cardinal(int count, String languageCode,
-    {String zero,
-    String one,
-    String two,
-    String few,
-    String many,
-    String other}) {
-  return _resolvePlural(count, languageCode, QuantityType.cardinal,
-      zero: zero, one: one, two: two, few: few, many: many, other: other);
+String cardinal(int count, String languageCode, {String zero, String one, String two, String few, String many, String other}) {
+  return _resolvePlural(count, languageCode, QuantityType.cardinal, zero: zero, one: one, two: two, few: few, many: many, other: other);
 }
 
 ///
 /// See: http://cldr.unicode.org/index/cldr-spec/plural-rules
 ///
-String ordinal(int count, String languageCode,
-    {String zero,
-    String one,
-    String two,
-    String few,
-    String many,
-    String other}) {
-  return _resolvePlural(count, languageCode, QuantityType.ordinal,
-      zero: zero, one: one, two: two, few: few, many: many, other: other);
+String ordinal(int count, String languageCode, {String zero, String one, String two, String few, String many, String other}) {
+  return _resolvePlural(count, languageCode, QuantityType.ordinal, zero: zero, one: one, two: two, few: few, many: many, other: other);
 }
 
 Map<String, CategoryResolver> _resolverRegistry = {
@@ -67,29 +45,23 @@ Map<String, CategoryResolver> _resolverRegistry = {
   'cs': cs.quantityResolver,
 };
 
-String _resolvePlural(int count, String languageCode, QuantityType type,
-    {String zero,
-    String one,
-    String two,
-    String few,
-    String many,
-    String other}) {
+String _resolvePlural(int count, String languageCode, QuantityType type, {String zero, String one, String two, String few, String many, String other}) {
   var c = _resolveCategory(languageCode, count, type);
   c ??= QuantityCategory.other;
   many ??= other;
   switch (c) {
     case QuantityCategory.zero:
-      return _firstNotNull(zero, many);
+      return _firstNotNull([zero, many, other]);
     case QuantityCategory.one:
-      return _firstNotNull(one, many);
+      return _firstNotNull([one, many, other]);
     case QuantityCategory.two:
-      return _firstNotNull(two, many);
+      return _firstNotNull([two, few, many, other]);
     case QuantityCategory.few:
-      return _firstNotNull(few, many);
+      return _firstNotNull([few, many, other]);
     case QuantityCategory.many:
-      return _firstNotNull(many, other);
+      return _firstNotNull([many, other, few]);
     case QuantityCategory.other:
-      return _firstNotNull(other, many);
+      return _firstNotNull([other, many, few]);
   }
   return '???';
 }
@@ -110,8 +82,7 @@ QuantityCategory _defaultResolver(int count, QuantityType type) {
   return QuantityCategory.other;
 }
 
-QuantityCategory _resolveCategory(
-    String languageCode, int count, QuantityType type) {
+QuantityCategory _resolveCategory(String languageCode, int count, QuantityType type) {
   if (count == null) return QuantityCategory.other;
   CategoryResolver resolver;
   if (languageCode != null) {
@@ -123,8 +94,6 @@ QuantityCategory _resolveCategory(
   return resolver(count, type);
 }
 
-String _firstNotNull(String a, String b) {
-  if (a != null) return a;
-  if (b != null) return b;
-  return '???';
+String _firstNotNull(List<String> possibilities) {
+  return possibilities.firstWhere((a) => a != null, orElse: () => "???");
 }

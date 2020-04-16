@@ -39,8 +39,13 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
     renderTodoItem(todo, output);
     output.writeln('');
   }
-  var formatter = DartFormatter();
-  return formatter.format(output.toString());
+  try {
+    var formatter = DartFormatter();
+    return formatter.format(output.toString());
+  } catch (e) {
+    print("Cannot format ${meta.languageCode} messages. You might need to escape some special characters with a backslash. Please investigate generated class.");
+    return output.toString();
+  }
 }
 
 ClassMeta generateMessageObjectName(String fileName) {

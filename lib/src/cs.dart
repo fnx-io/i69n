@@ -15,6 +15,8 @@ QuantityCategory quantityResolver(int count, QuantityType type) {
 
 QuantityCategory _resolveCardinal(int count) {
   switch (count) {
+    case 0:
+      return QuantityCategory.zero;
     case 1:
       return QuantityCategory.one;
     case 2:
@@ -28,5 +30,6 @@ QuantityCategory _resolveCardinal(int count) {
 }
 
 QuantityCategory _resolveOrdinal(int count) {
+  if (count == 0) return QuantityCategory.zero;
   return QuantityCategory.other;
 }

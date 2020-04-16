@@ -15,6 +15,8 @@ QuantityCategory quantityResolver(int count, QuantityType type) {
 
 QuantityCategory _resolveCardinal(int count) {
   switch (count) {
+    case 0:
+      return QuantityCategory.zero;
     case 1:
       return QuantityCategory.one;
   }
@@ -22,6 +24,7 @@ QuantityCategory _resolveCardinal(int count) {
 }
 
 QuantityCategory _resolveOrdinal(int count) {
+  if (count == 0) return QuantityCategory.zero;
   var mod10 = count % 10;
   var mod100 = count % 100;
   if (mod10 == 1 && mod100 != 11) return QuantityCategory.one;

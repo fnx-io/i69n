@@ -13,9 +13,12 @@ void main() async {
   print(m.generic.ok);
   print(m.generic.done);
   print(m.invoice.help);
+  print(m.apples.count(0));
   print(m.apples.count(1));
   print(m.apples.count(2));
   print(m.apples.count(5));
+
+  print('Problematic: ' + m.apples.problematic(0));
 
   print('Asynchronous load of Czech messages:');
   await cs.loadLibrary();
@@ -24,6 +27,7 @@ void main() async {
   print(m.generic.ok); // inherited from default
   print(m.generic.done);
   print(m.invoice.help);
+  print(m.apples.count(0));
   print(m.apples.count(1));
   print(m.apples.count(2));
   print(m.apples.count(5));
@@ -35,8 +39,7 @@ void main() async {
 
   // Override plurals for Czech or register support for your own language:
   i69n.registerResolver('cs', (int count, i69n.QuantityType type) {
-    if (type == i69n.QuantityType.cardinal && count == 1)
-      return i69n.QuantityCategory.one;
+    if (type == i69n.QuantityType.cardinal && count == 1) return i69n.QuantityCategory.one;
     return i69n.QuantityCategory.other;
   });
 
