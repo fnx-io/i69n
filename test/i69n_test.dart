@@ -1,7 +1,10 @@
+// ignore_for_file: prefer_single_quotes
 import 'package:i69n/i69n.dart';
 import 'package:i69n/src/i69n_impl.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
+
+import 'testMessages.i69n.dart';
 
 void main() {
   group('Messages meta data', () {
@@ -15,6 +18,8 @@ void main() {
 
   group('Plurals', () {
     test('en', () {
+      expect(plural(0, 'en', zero: 'ZERO!', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('ZERO!'));
+      expect(plural(0, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('OTHER!'));
       expect(plural(1, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('ONE!'));
       expect(plural(2, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('OTHER!'));
       expect(plural(3, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('OTHER!'));
@@ -67,16 +72,12 @@ void main() {
       expect(escapeDartString('កើតមកមានសេរីភាព'), equals('កើតមកមានសេរីភាព')); // Khmer
       expect(escapeDartString(r'$'), equals(r'$')); // does't escape dollar sign
       expect(escapeDartString(r'"'), equals(r'"')); // does't escape "
-      expect(escapeDartString(r"'"), equals(r"\'")); // does escape '
+      expect(escapeDartString(r"'"), equals(r"'")); // doesn't escape '
       expect(escapeDartString(r"\"), equals(r"\")); // doesn't escape \
       expect(escapeDartString("\t"), equals(r"\t")); // does escape tab
       expect(escapeDartString("\n"), equals(r"\n")); // does escape \n
       expect(escapeDartString("""Multiline
 message"""), equals(r"Multiline\nmessage")); // handles multiline strings
-      expect(escapeDartString(r"'${}"), equals(r"\'${}")); // does escape outside of ${...}
-      expect(escapeDartString(r"${}'"), equals(r"${}\'")); // does escape outside of ${...}
-      expect(escapeDartString(r"${'}"), equals(r"${'}")); // doesn't escape inside ${...}
-      expect(escapeDartString(r"${'}'${'}"), equals(r"${'}\'${'}")); // doesn't escape inside ${...}
       expect(escapeDartString(r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY"),
           equals(r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY")); // doesn't escape inside ${...}
     });
@@ -113,10 +114,19 @@ message"""), equals(r"Multiline\nmessage")); // handles multiline strings
         output.writeln('');
       }
 
-      String result = output.toString();
+      var result = output.toString();
       expect(result.contains("[] operator is disabled in en.or.something, see _i69n: nomap flag."), isTrue);
-      expect(result.contains(r"String get subfoo => 'sub\'bar';"), isTrue); // automatically escaped
-      expect(result.contains(r"String get a => 'A\'A';"), isTrue); // escaped by author
+      expect(result.contains("String get subfoo => \"sub'bar\";"), isTrue);
+      expect(result.contains("String get a => \"A\\'A\";"), isTrue); // copied escape sequence
+    });
+
+    test('e2e test', () {
+      var m = TestMessages();
+      expect(m.apples.problematic(0), equals("didn't find any tasks"));
+      expect(m.apples.problematic(1), equals("found 1 task"));
+      expect(m.apples.problematic(2), equals("found 2 tasks"));
+      expect(m.apples.quotes, equals('Hello "world"!'));
+      expect(m.apples.quotes2, equals('Hello "world"!'));
     });
   });
 }

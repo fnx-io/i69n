@@ -95,5 +95,5 @@ QuantityCategory _resolveCategory(String languageCode, int count, QuantityType t
 }
 
 String _firstNotNull(List<String> possibilities) {
-  return possibilities.firstWhere((a) => a != null, orElse: () => "???");
+  return possibilities.firstWhere((a) => a != null, orElse: () => '???');
 }

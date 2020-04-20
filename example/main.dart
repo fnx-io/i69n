@@ -18,8 +18,6 @@ void main() async {
   print(m.apples.count(2));
   print(m.apples.count(5));
 
-  print('Problematic: ' + m.apples.problematic(0));
-
   print('Asynchronous load of Czech messages:');
   await cs.loadLibrary();
   print('Some czech:');

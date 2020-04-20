@@ -4,7 +4,8 @@ Simple internationalization (i18n) package for Dart and Flutter.
 [![pub package](https://img.shields.io/badge/pub.dev-i69n-brightgreen)](https://pub.dev/packages/i69n)
 [![open source](https://img.shields.io/badge/Github-i69n-brightgreen)](https://github.com/fnx-io/i69n)
 
-Supports:
+**Supports:**
+
 - AngularDart
 - Flutter hot reload
 - deferred loading of translations
@@ -55,18 +56,12 @@ Package is an extension (custom builder) for [build_runner](https://pub.dartlang
 (Dart standard for source generation) and it can be used with Flutter, AngularDart
 or any other type of Dart project.
 
-## Motivation and goals
+# i69n: 51 points simpler than your standard i18n!
 
 * The official Dart/Flutter approach to i18n seems to be ... complicated and kind of ... heavyweight.
 * I would like my messages to be **checked during compile time**. Is that message really there?
 * Key to the localized message shouldn't be just some arbitrary String, it should be a **getter method**!
-* And if the message takes some **parameters**, the method should take those parameters! 
-* I like to bundle messages into thematic groups, the i18n tool should support that and help me with it.
-* Dart has awesome **string interpolation**, I want to leverage that!
-* I like build_runner and code generation.
-* I love the name. i69n is hilarious.
-
-# i69n: 51 points simpler than your standard i18n!
+* And if the message takes some **parameters**, it should be a method which take those parameters! 
     
 ## How to use with Flutter
 
@@ -258,27 +253,33 @@ must be included in all translation files. Flag is NOT inherited into lower leve
 
 ## Escaping special characters
 
-i69n will try hard to escape your strings so that the generated source code is correct:
+i69n uses double quotes in generated source files. Unless you need to use double quotes in your string,
+you should be fine.
 
     message: Let's go!
     ...
-    String get message => 'Let\'s go!';    
-    
-But in some cases you might want to disabled this feature and
-escape special characters by hand. Use 'noescape' flag:
+    String get message => "Let's go!";
+                
+Only "\t", "\r" and "\n" characters are automatically escaped by i69n. 
+
+    message: "Let's\ngo!" // quotes needed by YAML, \n is converted to new line by YAML
+    ...
+    String get message => "Let's\ngo!"; // new line escaped by i69n -> result is the same string    
+
+If need to disable escaping, use "noescape" flag.
 
     _i69n: noescape
     message: Let's go!
-    ...
-    String get message => 'Let's go!';
-     
-Without proper escaping, this will lead to compile time error.
-In this case you must escape your string in the source YAML by hand:
 
-    _i69n: noescape    
-    message: Let\'s go!
-    ...
-    String get message => 'Let\'s go!';    
+### Escaping the details of escaping
+
+These are a few examples of more complicated strings in which you might to add a backslash here and there:
+  
+    problematic: "Hello \\\"world\\\"!" // yes, tripple backslash before "
+    lessProblematic: 'Hello \"world\"!'
+    alsoProblematic(int count): "${_plural(count, zero:'didn\\'t find any tasks', other: 'found some tasks')}"  
+
+But in most cases you will be fine. Just observe generated classes and maybe experiment a little bit.    
     
 ## More configuration flags
 
@@ -322,3 +323,6 @@ Created by [https://fnx.io](https://fnx.io).
 
 ## From < 1.0 to >= 1.0
 
+You will (maybe) need to make some changes because of new escaping rules.
+Either add/remove some backslashes here and there, or use
+`_i69n: noescape` flag. See "Escaping special characters" above.

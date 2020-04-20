@@ -17,7 +17,7 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
 
   var output = StringBuffer();
 
-  output.writeln('// ignore_for_file: unused_element, unused_field, camel_case_types, annotate_overrides');
+  output.writeln('// ignore_for_file: unused_element, unused_field, camel_case_types, annotate_overrides, prefer_single_quotes');
   output.writeln('// GENERATED FILE, do not edit!');
   output.writeln('import \'package:i69n/i69n.dart\' as i69n;');
   if (meta.defaultFileName != null) {
@@ -43,7 +43,7 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
     var formatter = DartFormatter();
     return formatter.format(output.toString());
   } catch (e) {
-    print("Cannot format ${meta.languageCode} messages. You might need to escape some special characters with a backslash. Please investigate generated class.");
+    print('Cannot format ${meta.languageCode}, ${meta.defaultObjectName} messages. You might need to escape some special characters with a backslash. Please investigate generated class.');
     return output.toString();
   }
 }
@@ -95,7 +95,6 @@ ClassMeta generateMessageObjectName(String fileName) {
 
 void renderTodoItem(TodoItem todo, StringBuffer output) {
   var meta = todo.meta;
-  var content = todo.content;
 
   if (meta.isDefault) {
     output.writeln('class ${meta.objectName} implements i69n.I69nMessageBundle {');
@@ -121,7 +120,7 @@ void renderTodoItem(TodoItem todo, StringBuffer output) {
   output.writeln('}');
 }
 
-const _reserved = {"_i69n"};
+const _reserved = ['_i69n'];
 
 void renderTodoItemMapOperator(TodoItem todo, StringBuffer output) {
   output.writeln('\tObject operator[](String key) {');
@@ -129,7 +128,7 @@ void renderTodoItemMapOperator(TodoItem todo, StringBuffer output) {
   output.writeln('\t\tif (index > 0) {');
   output.writeln('\t\t\treturn (this[key.substring(0,index)] as i69n.I69nMessageBundle)[key.substring(index+1)];');
   output.writeln('\t\t}');
-  if (!todo.hasFlag("nomap")) {
+  if (!todo.hasFlag('nomap')) {
     output.writeln('\t\tswitch(key) {');
     todo.content.forEach((k, v) {
       if (!_reserved.contains(k)) {
@@ -154,23 +153,25 @@ void renderTodoItemMapOperator(TodoItem todo, StringBuffer output) {
 
 void renderTodoItemProperties(TodoItem todo, StringBuffer output) {
   var _escapeFunction = escapeDartString;
-  if (todo.hasFlag("noescape")) {
+  if (todo.hasFlag('noescape')) {
     _escapeFunction = (String s) => s;
   }
   todo.content.forEach((k, v) {
-    if (v is YamlMap) {
-      var prefix = _firstCharUpper(k);
-      var child = todo.meta.nest(prefix);
-      output.writeln('\t${child.objectName} get ${k} => ${child.objectName}(this);');
-    } else {
-      if (k.contains('(')) {
-        // function
-        output.writeln("\tString ${k} => '${_escapeFunction(v)}';");
+    if (!_reserved.contains(k)) {
+      if (v is YamlMap) {
+        var prefix = _firstCharUpper(k);
+        var child = todo.meta.nest(prefix);
+        output.writeln('\t${child.objectName} get ${k} => ${child.objectName}(this);');
       } else {
-        if (k.contains('.')) {
-          throw Exception('Your message key cannot contain a dot, see $k');
+        if (k.contains('(')) {
+          // function
+          output.writeln('\tString ${k} => "${_escapeFunction(v)}";');
+        } else {
+          if (k.contains('.')) {
+            throw Exception('Your message key cannot contain a dot, see $k');
+          }
+          output.writeln('\tString get ${k} => "${_escapeFunction(v)}";');
         }
-        output.writeln("\tString get ${k} => '${_escapeFunction(v)}';");
       }
     }
   });
@@ -206,45 +207,19 @@ String escapeDartString(String string) {
   var sb = StringBuffer();
   var i = 0;
 
-  int _inside = 0;
-
   for (var c in string.runes) {
-    if (c == 36 && _inside == 0) {
-      // $
-      _inside = 1;
-      sb.write(r'$');
-    } else if (c == 123 && _inside == 1) {
-      // {
-      _inside = 2;
-      sb.write(r'{');
-    } else if (c == 125 && _inside == 2) {
-      // }
-      _inside = 0;
-      sb.write(r'}');
-    } else if (_inside != 2) {
-      _inside = 0;
-      switch (c) {
-        case 9:
-          sb.write("\\t");
-          break;
-        case 10:
-          sb.write("\\n");
-          break;
-        case 13:
-          sb.write("\\r");
-          break;
-        case 39:
-          sb.write("\\\'");
-          break;
-/*        case 92:
-          sb.write(r'\\');
-          break;*/
-        default:
-          sb.write(string[i]);
-      }
-    } else {
-      // don't escape inside ${...} expression
-      sb.write(string[i]);
+    switch (c) {
+      case 9:
+        sb.write('\\t');
+        break;
+      case 10:
+        sb.write('\\n');
+        break;
+      case 13:
+        sb.write('\\r');
+        break;
+      default:
+        sb.write(string[i]);
     }
     i++;
   }
