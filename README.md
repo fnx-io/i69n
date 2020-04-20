@@ -275,9 +275,16 @@ If need to disable escaping, use "noescape" flag.
 
 These are a few examples of more complicated strings in which you might to add a backslash here and there:
   
-    problematic: "Hello \\\"world\\\"!" // yes, tripple backslash before "
+    problematic: "Hello \\\"world\\\"!"  
+    //                  ^^^ yes, tripple backslash
+    
     lessProblematic: 'Hello \"world\"!'
-    alsoProblematic(int count): "${_plural(count, zero:'didn\\'t find any tasks', other: 'found some tasks')}"  
+    //                      ^ use single quotes in YAML, add only one backslash for Dart    
+    
+    alsoProblematic(int count): "${_plural(count, zero:'didn\\'t find any tasks', other: 'found some tasks')}"
+    //                                                      ^ here
+    
+Please prefer single quotes inside pluralization functions.
 
 But in most cases you will be fine. Just observe generated classes and maybe experiment a little bit.    
     
