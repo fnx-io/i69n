@@ -247,9 +247,9 @@ In such case use a simple flag 'nomap':
       done: Done
       ok: OK             
       
-No message in 'generic' message group will be accessible through the `[]` operator. Flag
-must be included in all translation files. Flag is NOT inherited into lower levels of messages
-(eq. generic.dialog.errors....).  
+No message in 'generic' message group will be accessible through the `[]` operator. Scope of the flag is very narrow - one message object
+in one file. Flag is not inherited into lower levels of messages and in
+most cases you want to repeat it in all translations files to make an impact.
 
 ## Escaping special characters
 
@@ -266,14 +266,14 @@ Only "\t", "\r" and "\n" characters are automatically escaped by i69n.
     ...
     String get message => "Let's\ngo!"; // new line escaped by i69n -> result is the same string    
 
-If need to disable escaping, use "noescape" flag.
+If you need to disable escaping, use "noescape" flag.
 
     _i69n: noescape
     message: Let's go!
 
 ### Escaping the details of escaping
 
-These are a few examples of more complicated strings in which you might to add a backslash here and there:
+These are a few examples of more complicated strings in which you might need to add a backslash here and there:
   
     problematic: "Hello \\\"world\\\"!"  
     //                  ^^^ yes, tripple backslash
