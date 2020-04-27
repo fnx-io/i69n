@@ -1,3 +1,7 @@
+## 1.1.0
+
+- polishing, fine-tuning, release
+
 ## 1.0.0
 
 - possibility to customize generator behaviour with flags 
