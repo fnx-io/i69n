@@ -1,20 +1,20 @@
 part of i69n;
 
 class ClassMeta {
-  ClassMeta parent;
-  bool isDefault;
-  String defaultObjectName;
-  String defaultFileName;
-  String objectName;
-  String localeName;
-  String languageCode;
+  ClassMeta? parent;
+  bool? isDefault;
+  String? defaultObjectName;
+  String? defaultFileName;
+  String? objectName;
+  String? localeName;
+  String? languageCode;
 
   ClassMeta nest(String namePrefix) {
     var result = ClassMeta();
     result.parent = this;
     result.isDefault = isDefault;
-    result.defaultObjectName = '${namePrefix}${defaultObjectName}';
-    result.objectName = '${namePrefix}${objectName}';
+    result.defaultObjectName = '$namePrefix$defaultObjectName';
+    result.objectName = '$namePrefix$objectName';
     result.localeName = localeName;
     result.languageCode = languageCode;
     return result;
@@ -23,21 +23,26 @@ class ClassMeta {
 
 class TodoItem {
   ClassMeta meta;
-  Set<String> flags;
+  Set<String>? flags;
   YamlMap content;
-  TodoItem parent;
-  String prefix;
+  TodoItem? parent;
+  String? prefix;
 
-  String get path => parent == null ? meta.languageCode : '${parent.path}.$prefix';
+  String? get path =>
+      parent == null ? meta.languageCode : '${parent!.path}.$prefix';
 
   bool hasFlag(String flag) {
     return (flags?.contains(flag) ?? false);
   }
 
   TodoItem(this.prefix, this.parent, this.meta, this.content) {
-    if (content != null && content['_i69n'] != null) {
-      if (content['_i69n'] is! String) throw Exception('Multiple flags in _i69n configuration message key must be comma separated');
-      flags = (content['_i69n'] as String).split(',').map((f) => f.trim()).toSet();
+    if (content['_i69n'] != null) {
+      if (content['_i69n'] is! String) {
+        throw Exception(
+            'Multiple flags in _i69n configuration message key must be comma separated');
+      }
+      flags =
+          (content['_i69n'] as String).split(',').map((f) => f.trim()).toSet();
     } else {
       // ignore: prefer_collection_literals
       flags = Set();

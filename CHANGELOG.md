@@ -1,3 +1,7 @@
+## 2.0.0
+
+- migration to null safety
+
 ## 1.1.0
 
 - polishing, fine-tuning, release

@@ -17,7 +17,8 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
 
   var output = StringBuffer();
 
-  output.writeln('// ignore_for_file: unused_element, unused_field, camel_case_types, annotate_overrides, prefer_single_quotes');
+  output.writeln(
+      '// ignore_for_file: unused_element, unused_field, camel_case_types, annotate_overrides, prefer_single_quotes');
   output.writeln('// GENERATED FILE, do not edit!');
   output.writeln('import \'package:i69n/i69n.dart\' as i69n;');
   if (meta.defaultFileName != null) {
@@ -27,12 +28,18 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
   output.writeln('String get _languageCode => \'${meta.languageCode}\';');
   output.writeln('String get _localeName => \'${meta.localeName}\';');
   output.writeln('');
-  output.writeln('String _plural(int count, {String zero, String one, String two, String few, String many, String other}) =>');
-  output.writeln('\ti69n.plural(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
-  output.writeln('String _ordinal(int count, {String zero, String one, String two, String few, String many, String other}) =>');
-  output.writeln('\ti69n.ordinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
-  output.writeln('String _cardinal(int count, {String zero, String one, String two, String few, String many, String other}) =>');
-  output.writeln('\ti69n.cardinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
+  output.writeln(
+      'String _plural(int count, {String? zero, String? one, String? two, String? few, String? many, String? other}) =>');
+  output.writeln(
+      '\ti69n.plural(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
+  output.writeln(
+      'String _ordinal(int count, {String? zero, String? one, String? two, String? few, String? many, String? other}) =>');
+  output.writeln(
+      '\ti69n.ordinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
+  output.writeln(
+      'String _cardinal(int count, {String? zero, String? one, String? two, String? few, String? many, String? other}) =>');
+  output.writeln(
+      '\ti69n.cardinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
   output.writeln('');
 
   for (var todo in todoList) {
@@ -43,7 +50,8 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
     var formatter = DartFormatter();
     return formatter.format(output.toString());
   } catch (e) {
-    print('Cannot format ${meta.languageCode}, ${meta.defaultObjectName} messages. You might need to escape some special characters with a backslash. Please investigate generated class.');
+    print(
+        'Cannot format ${meta.languageCode}, ${meta.defaultObjectName} messages. You might need to escape some special characters with a backslash. Please investigate generated class.');
     return output.toString();
   }
 }
@@ -76,7 +84,8 @@ ClassMeta generateMessageObjectName(String fileName) {
     if (nameParts.length >= 2) {
       var languageCode = nameParts[1];
       if (twoCharsLower.allMatches(languageCode).length != 1) {
-        throw Exception('Wrong language code $languageCode in file name $fileName. Language code must match $twoCharsLower');
+        throw Exception(
+            'Wrong language code $languageCode in file name $fileName. Language code must match $twoCharsLower');
       }
       result.languageCode = languageCode;
       result.localeName = languageCode;
@@ -84,9 +93,10 @@ ClassMeta generateMessageObjectName(String fileName) {
     if (nameParts.length == 3) {
       var countryCode = nameParts[2];
       if (twoCharsUpper.allMatches(countryCode).length != 1) {
-        throw Exception('Wrong country code $countryCode in file name $fileName. Country code must match $twoCharsUpper');
+        throw Exception(
+            'Wrong country code $countryCode in file name $fileName. Country code must match $twoCharsUpper');
       }
-      result.localeName = '${result.languageCode}_${countryCode}';
+      result.localeName = '${result.languageCode}_$countryCode';
     }
     result.objectName = '${result.defaultObjectName}_${result.localeName}';
     return result;
@@ -96,20 +106,23 @@ ClassMeta generateMessageObjectName(String fileName) {
 void renderTodoItem(TodoItem todo, StringBuffer output) {
   var meta = todo.meta;
 
-  if (meta.isDefault) {
-    output.writeln('class ${meta.objectName} implements i69n.I69nMessageBundle {');
+  if (meta.isDefault!) {
+    output.writeln(
+        'class ${meta.objectName} implements i69n.I69nMessageBundle {');
   } else {
-    output.writeln('class ${meta.objectName} extends ${meta.defaultObjectName} {');
+    output.writeln(
+        'class ${meta.objectName} extends ${meta.defaultObjectName} {');
   }
 
   if (meta.parent == null) {
     output.writeln('\tconst ${meta.objectName}();');
   } else {
-    output.writeln('\tfinal ${meta.parent.objectName} _parent;');
-    if (meta.isDefault) {
+    output.writeln('\tfinal ${meta.parent!.objectName} _parent;');
+    if (meta.isDefault!) {
       output.writeln('\tconst ${meta.objectName}(this._parent);');
     } else {
-      output.writeln('\tconst ${meta.objectName}(this._parent):super(_parent);');
+      output
+          .writeln('\tconst ${meta.objectName}(this._parent):super(_parent);');
     }
   }
 
@@ -126,7 +139,8 @@ void renderTodoItemMapOperator(TodoItem todo, StringBuffer output) {
   output.writeln('\tObject operator[](String key) {');
   output.writeln('\t\tvar index = key.indexOf(\'.\');');
   output.writeln('\t\tif (index > 0) {');
-  output.writeln('\t\t\treturn (this[key.substring(0,index)] as i69n.I69nMessageBundle)[key.substring(index+1)];');
+  output.writeln(
+      '\t\t\treturn (this[key.substring(0,index)] as i69n.I69nMessageBundle)[key.substring(index+1)];');
   output.writeln('\t\t}');
   if (!todo.hasFlag('nomap')) {
     output.writeln('\t\tswitch(key) {');
@@ -139,14 +153,16 @@ void renderTodoItemMapOperator(TodoItem todo, StringBuffer output) {
         output.writeln('\t\t\tcase \'$key\': return $key;');
       }
     });
-    if (todo.meta.isDefault) {
-      output.writeln('\t\t\tdefault: throw Exception(\'Message \$key doesn\\\'t exist in \$this\');');
+    if (todo.meta.isDefault!) {
+      output.writeln(
+          '\t\t\tdefault: throw Exception(\'Message \$key doesn\\\'t exist in \$this\');');
     } else {
       output.writeln('\t\t\tdefault: return super[key];');
     }
     output.writeln('\t\t}');
   } else {
-    output.writeln('\t\tthrow Exception(\'[] operator is disabled in ${todo.path}, see _i69n: nomap flag.\');');
+    output.writeln(
+        '\t\tthrow Exception(\'[] operator is disabled in ${todo.path}, see _i69n: nomap flag.\');');
   }
   output.writeln('\t}');
 }
@@ -154,30 +170,32 @@ void renderTodoItemMapOperator(TodoItem todo, StringBuffer output) {
 void renderTodoItemProperties(TodoItem todo, StringBuffer output) {
   var _escapeFunction = escapeDartString;
   if (todo.hasFlag('noescape')) {
-    _escapeFunction = (String s) => s;
+    _escapeFunction = (String? s) => s;
   }
   todo.content.forEach((k, v) {
     if (!_reserved.contains(k)) {
       if (v is YamlMap) {
         var prefix = _firstCharUpper(k);
         var child = todo.meta.nest(prefix);
-        output.writeln('\t${child.objectName} get ${k} => ${child.objectName}(this);');
+        output.writeln(
+            '\t${child.objectName} get $k => ${child.objectName}(this);');
       } else {
         if (k.contains('(')) {
           // function
-          output.writeln('\tString ${k} => "${_escapeFunction(v)}";');
+          output.writeln('\tString $k => "${_escapeFunction(v)}";');
         } else {
           if (k.contains('.')) {
             throw Exception('Your message key cannot contain a dot, see $k');
           }
-          output.writeln('\tString get ${k} => "${_escapeFunction(v)}";');
+          output.writeln('\tString get $k => "${_escapeFunction(v)}";');
         }
       }
     }
   });
 }
 
-void prepareTodoList(String prefix, TodoItem parent, List<TodoItem> todoList, YamlMap messages, ClassMeta name) {
+void prepareTodoList(String? prefix, TodoItem? parent, List<TodoItem> todoList,
+    YamlMap messages, ClassMeta name) {
   var todo = TodoItem(prefix, parent, name, messages);
   todoList.add(todo);
 
@@ -197,7 +215,7 @@ String _renderFileNameError(String name) {
   return 'Wrong file name: "$name"';
 }
 
-String escapeDartString(String string) {
+String? escapeDartString(String? string) {
   if (string == null) {
     return null;
   }

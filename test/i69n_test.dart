@@ -50,14 +50,14 @@ void main() {
 
       prepareTodoList(null, null, todoList, loadYaml(yaml), root);
       todoList.sort((a, b) {
-        return a.meta.objectName.compareTo(b.meta.objectName);
+        return a.meta.objectName!.compareTo(b.meta.objectName!);
       });
       expect(todoList.length, equals(4));
       expect(todoList[0].meta.objectName, equals('FooTest'));
       expect(todoList[1].meta.objectName, equals('OrTest'));
       expect(todoList[2].meta.objectName, equals('StatusOrTest'));
       expect(todoList[2].meta.parent, equals(todoList[1].meta));
-      expect(todoList[2].meta.parent.parent, equals(todoList[3].meta));
+      expect(todoList[2].meta.parent!.parent, equals(todoList[3].meta));
       expect(todoList[3].meta.objectName, equals('Test'));
       expect(todoList[3].meta.parent, isNull);
     });
@@ -131,7 +131,7 @@ message"""), equals(r"Multiline\nmessage")); // handles multiline strings
   });
 }
 
-void testMeta(String name, {bool isDefault, String defaultObjectName, String objectName, String languageCode, String localeName}) {
+void testMeta(String name, {bool? isDefault, String? defaultObjectName, String? objectName, String? languageCode, String? localeName}) {
   var meta = generateMessageObjectName(name);
   test('$name: isDefault', () {
     expect(meta.isDefault, equals(isDefault));

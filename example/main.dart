@@ -32,8 +32,8 @@ void main() async {
 
   print('Access messages at runtime, with plain old string keys');
   print('Static:  ' + m.generic.ok);
-  print('Dynamic: ' + m.generic['ok']);
-  print('Or even: ' + m['generic.ok']);
+  print('Dynamic: ' + (m.generic['ok'] as String));
+  print('Or even: ' + (m['generic.ok'] as String));
 
   // Override plurals for Czech or register support for your own language:
   i69n.registerResolver('cs', (int count, i69n.QuantityType type) {
