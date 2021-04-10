@@ -10,8 +10,12 @@ Simple internationalization (i18n) package for Dart and Flutter.
 - Flutter hot reload
 - deferred loading of translations
 - social distancing
+- null safety
 
-(Migrating from < 1.0 to >= 1.0 ? See few notes at the very bottom of this page.) 
+Note: Want to use null-safe version? Use:
+
+    dependencies:
+      i69n: ^2.0.0-nullsafe.1
 
 # Overview
 
@@ -326,10 +330,6 @@ Now open the browser http://localhost:8080/ and watch the dev tools console.
 
 Created by [https://fnx.io](https://fnx.io).
 
-# Migration
+# See also:
 
-## From < 1.0 to >= 1.0
-
-You will (maybe) need to make some changes because of new escaping rules.
-Either add/remove some backslashes here and there, or use
-`_i69n: noescape` flag. See "Escaping special characters" above.
+https://pub.dev/packages/preconditions
