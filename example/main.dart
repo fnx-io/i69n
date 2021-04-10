@@ -31,13 +31,15 @@ void main() async {
   print(m.apples.count(5));
 
   print('Access messages at runtime, with plain old string keys');
-  print('Static:  ' + m.generic.ok);
-  print('Dynamic: ' + (m.generic['ok'] as String));
-  print('Or even: ' + (m['generic.ok'] as String));
+  print('Static:  ${m.generic.ok}');
+  print('Dynamic: ${m.generic['ok']}');
+  print('Or even: ${m['generic.ok']}');
 
   // Override plurals for Czech or register support for your own language:
   i69n.registerResolver('cs', (int count, i69n.QuantityType type) {
-    if (type == i69n.QuantityType.cardinal && count == 1) return i69n.QuantityCategory.one;
+    if (type == i69n.QuantityType.cardinal && count == 1) {
+      return i69n.QuantityCategory.one;
+    }
     return i69n.QuantityCategory.other;
   });
 

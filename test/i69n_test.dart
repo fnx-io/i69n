@@ -8,29 +8,66 @@ import 'testMessages.i69n.dart';
 
 void main() {
   group('Messages meta data', () {
-    testMeta('messages', isDefault: true, defaultObjectName: 'Messages', objectName: 'Messages', languageCode: 'en', localeName: 'en');
-    testMeta('messages_cs', isDefault: false, defaultObjectName: 'Messages', objectName: 'Messages_cs', languageCode: 'cs', localeName: 'cs');
+    testMeta('messages',
+        isDefault: true,
+        defaultObjectName: 'Messages',
+        objectName: 'Messages',
+        languageCode: 'en',
+        localeName: 'en');
+    testMeta('messages_cs',
+        isDefault: false,
+        defaultObjectName: 'Messages',
+        objectName: 'Messages_cs',
+        languageCode: 'cs',
+        localeName: 'cs');
 
-    testMeta('domainMessages', isDefault: true, defaultObjectName: 'DomainMessages', objectName: 'DomainMessages', languageCode: 'en', localeName: 'en');
-    testMeta('domainMessages_cs', isDefault: false, defaultObjectName: 'DomainMessages', objectName: 'DomainMessages_cs', languageCode: 'cs', localeName: 'cs');
-    testMeta('domainMessages_cs_CZ', isDefault: false, defaultObjectName: 'DomainMessages', objectName: 'DomainMessages_cs_CZ', languageCode: 'cs', localeName: 'cs_CZ');
+    testMeta('domainMessages',
+        isDefault: true,
+        defaultObjectName: 'DomainMessages',
+        objectName: 'DomainMessages',
+        languageCode: 'en',
+        localeName: 'en');
+    testMeta('domainMessages_cs',
+        isDefault: false,
+        defaultObjectName: 'DomainMessages',
+        objectName: 'DomainMessages_cs',
+        languageCode: 'cs',
+        localeName: 'cs');
+    testMeta('domainMessages_cs_CZ',
+        isDefault: false,
+        defaultObjectName: 'DomainMessages',
+        objectName: 'DomainMessages_cs_CZ',
+        languageCode: 'cs',
+        localeName: 'cs_CZ');
   });
 
   group('Plurals', () {
     test('en', () {
-      expect(plural(0, 'en', zero: 'ZERO!', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('ZERO!'));
-      expect(plural(0, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('OTHER!'));
-      expect(plural(1, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('ONE!'));
-      expect(plural(2, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('OTHER!'));
-      expect(plural(3, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('OTHER!'));
-      expect(plural(10, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('OTHER!'));
+      expect(
+          plural(0, 'en',
+              zero: 'ZERO!', one: 'ONE!', few: 'FEW!', other: 'OTHER!'),
+          equals('ZERO!'));
+      expect(plural(0, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'),
+          equals('OTHER!'));
+      expect(plural(1, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'),
+          equals('ONE!'));
+      expect(plural(2, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'),
+          equals('OTHER!'));
+      expect(plural(3, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'),
+          equals('OTHER!'));
+      expect(plural(10, 'en', one: 'ONE!', few: 'FEW!', other: 'OTHER!'),
+          equals('OTHER!'));
     });
 
     test('cs', () {
-      expect(plural(1, 'cs', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('ONE!'));
-      expect(plural(2, 'cs', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('FEW!'));
-      expect(plural(3, 'cs', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('FEW!'));
-      expect(plural(10, 'cs', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('OTHER!'));
+      expect(plural(1, 'cs', one: 'ONE!', few: 'FEW!', other: 'OTHER!'),
+          equals('ONE!'));
+      expect(plural(2, 'cs', one: 'ONE!', few: 'FEW!', other: 'OTHER!'),
+          equals('FEW!'));
+      expect(plural(3, 'cs', one: 'ONE!', few: 'FEW!', other: 'OTHER!'),
+          equals('FEW!'));
+      expect(plural(10, 'cs', one: 'ONE!', few: 'FEW!', other: 'OTHER!'),
+          equals('OTHER!'));
     });
   });
 
@@ -69,7 +106,8 @@ void main() {
       expect(escapeDartString('1232456789'), equals('1232456789'));
       expect(escapeDartString('+ěščřžýáí'), equals('+ěščřžýáí'));
       expect(escapeDartString('ネヨフ囲人ト横執所職'), equals('ネヨフ囲人ト横執所職')); // Japanese
-      expect(escapeDartString('កើតមកមានសេរីភាព'), equals('កើតមកមានសេរីភាព')); // Khmer
+      expect(escapeDartString('កើតមកមានសេរីភាព'),
+          equals('កើតមកមានសេរីភាព')); // Khmer
       expect(escapeDartString(r'$'), equals(r'$')); // does't escape dollar sign
       expect(escapeDartString(r'"'), equals(r'"')); // does't escape "
       expect(escapeDartString(r"'"), equals(r"'")); // doesn't escape '
@@ -78,8 +116,11 @@ void main() {
       expect(escapeDartString("\n"), equals(r"\n")); // does escape \n
       expect(escapeDartString("""Multiline
 message"""), equals(r"Multiline\nmessage")); // handles multiline strings
-      expect(escapeDartString(r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY"),
-          equals(r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY")); // doesn't escape inside ${...}
+      expect(
+          escapeDartString(
+              r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY"),
+          equals(
+              r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY")); // doesn't escape inside ${...}
     });
 
     test('Generated source code', () {
@@ -115,9 +156,13 @@ message"""), equals(r"Multiline\nmessage")); // handles multiline strings
       }
 
       var result = output.toString();
-      expect(result.contains("[] operator is disabled in en.or.something, see _i69n: nomap flag."), isTrue);
+      expect(
+          result.contains(
+              "[] operator is disabled in en.or.something, see _i69n: nomap flag."),
+          isTrue);
       expect(result.contains("String get subfoo => \"sub'bar\";"), isTrue);
-      expect(result.contains("String get a => \"A\\'A\";"), isTrue); // copied escape sequence
+      expect(result.contains("String get a => \"A\\'A\";"),
+          isTrue); // copied escape sequence
     });
 
     test('e2e test', () {
@@ -131,7 +176,12 @@ message"""), equals(r"Multiline\nmessage")); // handles multiline strings
   });
 }
 
-void testMeta(String name, {bool? isDefault, String? defaultObjectName, String? objectName, String? languageCode, String? localeName}) {
+void testMeta(String name,
+    {bool? isDefault,
+    String? defaultObjectName,
+    String? objectName,
+    String? languageCode,
+    String? localeName}) {
   var meta = generateMessageObjectName(name);
   test('$name: isDefault', () {
     expect(meta.isDefault, equals(isDefault));

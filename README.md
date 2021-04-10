@@ -235,9 +235,9 @@ of the message is composed dynamically at runtime, maybe like this:
  
 You can access your messages like this:
 
-    print("static:  "+m.generic.ok);
-    print("dynamic: "+m.generic['ok']);
-    print("or even: "+m['generic.ok']);
+    print('Static:  ${m.generic.ok}');
+    print('Dynamic: ${m.generic['ok']}');
+    print('Or even: ${m['generic.ok']}');
 
 In some rare cases you might want to 'disable' this map generation (maybe to enable better tree-shaking of unused messages?).
 In such case use a simple flag 'nomap':
