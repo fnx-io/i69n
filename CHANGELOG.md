@@ -1,4 +1,8 @@
-## 2.0.0
+## 2.0.0-nullsafety.2
+
+- Update dependencies
+
+## 2.0.0-nullsafety.1
 
 - migration to null safety
 

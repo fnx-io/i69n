@@ -15,7 +15,7 @@ Simple internationalization (i18n) package for Dart and Flutter.
 Note: Want to use null-safe version? Use:
 
     dependencies:
-      i69n: ^2.0.0-nullsafe.1
+      i69n: ^2.0.0-nullsafety.2
 
 # Overview
 
