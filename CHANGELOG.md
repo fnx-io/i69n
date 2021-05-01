@@ -1,3 +1,7 @@
+## 2.0.0
+
+- Nullsafe release
+
 ## 2.0.0-nullsafety.2
 
 - Update dependencies
