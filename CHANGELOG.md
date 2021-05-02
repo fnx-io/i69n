@@ -1,3 +1,7 @@
+## 2.0.1
+
+- Nullsafe README
+
 ## 2.0.0
 
 - Nullsafe release

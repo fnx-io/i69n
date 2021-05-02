@@ -12,11 +12,6 @@ Simple internationalization (i18n) package for Dart and Flutter.
 - social distancing
 - null safety
 
-Note: Want to use null-safe version? Use:
-
-    dependencies:
-      i69n: ^2.0.0-nullsafety.2
-
 # Overview
 
 Turn this **YAML** file:

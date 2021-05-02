@@ -1,6 +1,6 @@
 name: i69n
 description: Simple internationalization tool for Dart and Flutter, based on YAML files and source code generation.
-version: 2.0.0
+version: 2.0.1
 homepage: https://github.com/fnx-io/i69n
 
 environment:
