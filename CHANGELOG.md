@@ -1,3 +1,11 @@
+## 2.1.0
+
+- new 'prenullsafe' flag, which generate 'pre null safe' Dart code ('String' instead of 'String?')
+
+## 2.0.2
+
+- new nothrow flag
+
 ## 2.0.1
 
 - Nullsafe README

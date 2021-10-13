@@ -238,6 +238,20 @@ You can access your messages like this:
     print('Dynamic: ${m.generic['ok']}');
     print('Or even: ${m['generic.ok']}');
 
+In case the key doesn't exist, an exception is thrown:
+    
+    ...
+    throw Exception('Message $key doesn\'t exist in $this');
+
+You can disable this behaviour by adding flag 'nothrow':
+
+    _i69n: nothrow
+    generic:
+      done: Done
+      ok: OK
+
+This flag is inherited to the lower levels of messages structure.
+
 In some rare cases you might want to 'disable' this map generation (maybe to enable better tree-shaking of unused messages?).
 In such case use a simple flag 'nomap':
 
