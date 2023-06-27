@@ -1,3 +1,5 @@
+_i69n_import: dart:io
+_i69n_language: sk
 generic:
   _i69n: flag
   ok: OK
@@ -20,3 +22,11 @@ apples:
   anotherProblem: "here\nthere"
   quotes: "Hello \\\"world\\\"!"
   quotes2: 'Hello \"world\"!'
+friends:
+  michael:
+    name: Aaaaa
+    description: Aa Aa Aa
+  eva:
+    _i69n_implements: MichaelFriendsTestMessages # it's a node Michael in Friends in TestMessages file
+    name: Bbbbb
+    description: Bb Bb Bb

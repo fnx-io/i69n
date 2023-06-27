@@ -1,8 +1,9 @@
 // ignore_for_file: unused_element, unused_field, camel_case_types, annotate_overrides, prefer_single_quotes
 // GENERATED FILE, do not edit!
 import 'package:i69n/i69n.dart' as i69n;
+import 'dart:io';
 
-String get _languageCode => 'en';
+String get _languageCode => 'sk';
 String get _localeName => 'en';
 
 String _plural(int count,
@@ -38,6 +39,7 @@ class TestMessages implements i69n.I69nMessageBundle {
   GenericTestMessages get generic => GenericTestMessages(this);
   InvoiceTestMessages get invoice => InvoiceTestMessages(this);
   ApplesTestMessages get apples => ApplesTestMessages(this);
+  FriendsTestMessages get friends => FriendsTestMessages(this);
   Object operator [](String key) {
     var index = key.indexOf('.');
     if (index > 0) {
@@ -51,8 +53,10 @@ class TestMessages implements i69n.I69nMessageBundle {
         return invoice;
       case 'apples':
         return apples;
+      case 'friends':
+        return friends;
       default:
-        throw Exception('Message $key doesn\'t exist in $this');
+        return key;
     }
   }
 }
@@ -81,7 +85,7 @@ class GenericTestMessages implements i69n.I69nMessageBundle {
       case 'ordinalNumber':
         return ordinalNumber;
       default:
-        throw Exception('Message $key doesn\'t exist in $this');
+        return key;
     }
   }
 }
@@ -138,7 +142,77 @@ class ApplesTestMessages implements i69n.I69nMessageBundle {
       case 'quotes2':
         return quotes2;
       default:
-        throw Exception('Message $key doesn\'t exist in $this');
+        return key;
+    }
+  }
+}
+
+class FriendsTestMessages implements i69n.I69nMessageBundle {
+  final TestMessages _parent;
+  const FriendsTestMessages(this._parent);
+  MichaelFriendsTestMessages get michael => MichaelFriendsTestMessages(this);
+  EvaFriendsTestMessages get eva => EvaFriendsTestMessages(this);
+  Object operator [](String key) {
+    var index = key.indexOf('.');
+    if (index > 0) {
+      return (this[key.substring(0, index)]
+          as i69n.I69nMessageBundle)[key.substring(index + 1)];
+    }
+    switch (key) {
+      case 'michael':
+        return michael;
+      case 'eva':
+        return eva;
+      default:
+        return key;
+    }
+  }
+}
+
+class MichaelFriendsTestMessages implements i69n.I69nMessageBundle {
+  final FriendsTestMessages _parent;
+  const MichaelFriendsTestMessages(this._parent);
+  String get name => "Aaaaa";
+  String get description => "Aa Aa Aa";
+  Object operator [](String key) {
+    var index = key.indexOf('.');
+    if (index > 0) {
+      return (this[key.substring(0, index)]
+          as i69n.I69nMessageBundle)[key.substring(index + 1)];
+    }
+    switch (key) {
+      case 'name':
+        return name;
+      case 'description':
+        return description;
+      default:
+        return key;
+    }
+  }
+}
+
+class EvaFriendsTestMessages
+    implements i69n.I69nMessageBundle, MichaelFriendsTestMessages {
+  final FriendsTestMessages _parent;
+  const EvaFriendsTestMessages(this._parent);
+  String get _i69n_implements => "MichaelFriendsTestMessages";
+  String get name => "Bbbbb";
+  String get description => "Bb Bb Bb";
+  Object operator [](String key) {
+    var index = key.indexOf('.');
+    if (index > 0) {
+      return (this[key.substring(0, index)]
+          as i69n.I69nMessageBundle)[key.substring(index + 1)];
+    }
+    switch (key) {
+      case '_i69n_implements':
+        return _i69n_implements;
+      case 'name':
+        return name;
+      case 'description':
+        return description;
+      default:
+        return key;
     }
   }
 }

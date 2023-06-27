@@ -6,8 +6,8 @@ Simple internationalization (i18n) package for Dart and Flutter.
 
 **Supports:**
 
+- Flutter, hot reload included
 - AngularDart
-- Flutter hot reload
 - deferred loading of translations
 - social distancing
 - null safety
@@ -24,7 +24,7 @@ Turn this **YAML** file:
     users:
       welcome(String name): "Hello $name!"
       logout: Logout
-  
+
 Into these **generated** Dart classes:
 
     class ExampleMessages {
@@ -60,8 +60,8 @@ or any other type of Dart project.
 * The official Dart/Flutter approach to i18n seems to be ... complicated and kind of ... heavyweight.
 * I would like my messages to be **checked during compile time**. Is that message really there?
 * Key to the localized message shouldn't be just some arbitrary String, it should be a **getter method**!
-* And if the message takes some **parameters**, it should be a method which take those parameters! 
-    
+* And if the message takes some **parameters**, it should be a method which take those parameters!
+
 ## How to use with Flutter
 
 Create YAML file with your messages, for example:
@@ -74,7 +74,7 @@ Create YAML file with your messages, for example:
     invoice:
       create: Create an invoice
       delete: Delete this invoice    
-    
+
 Add translations for different languages:
 
     lib/messages/foo_cs.i69n.yaml (_cs = Czech translation)
@@ -85,7 +85,7 @@ Add translations for different languages:
     invoice:
       create: Vytvořit fakturu
       delete: Smazat fakturu
-    
+
 Add `build_runner` as a dev_dependency and `i69n` as a dependency to `pubspec.yaml`:
 
     dependencies:
@@ -98,18 +98,18 @@ Add `build_runner` as a dev_dependency and `i69n` as a dependency to `pubspec.ya
       build_runner: any
       flutter_test:
         sdk: flutter
- 
+
 Open a terminal and in the root of your Flutter project run:
 
     flutter packages pub run build_runner watch --delete-conflicting-outputs
-    
+
 ... and keep it running. Your message classes will appear next to YAML files and will be
 rebuilt automatically each time you change the source YAML.
 
 For one-time (re)build of your messages run:
 
     flutter packages pub run build_runner build --delete-conflicting-outputs
-   
+
 Import generated messages and use them:
 
     import 'packages:my_app/messages/foo.i69n.dart'
@@ -119,20 +119,20 @@ Import generated messages and use them:
     Foo m = Foo();
     return Text(m.bar);
     ...
-    
+
 ... or ...
 
     import 'packages:my_app/messages/foo_cs.i69n.dart'
     
     Foo m = Foo_cs(); // Notice: Foo_cs extends Foo
     return Text(m.bar);
-           
-    
+
+
 ## How to use with AngularDart
 
 You are using `webdev` tool already, so you just need to add `i69n`
- as a dependency and **that's all**.        
-      
+as a dependency and **that's all**.
+
 ## Parameters and pluralization
 
 The implementation is VERY straightforward, which allows you to do all sorts of crazy stuff:
@@ -147,8 +147,8 @@ The implementation is VERY straightforward, which allows you to do all sorts of 
     apples:
       _apples(int cnt): "${_plural(cnt, one:'apple', many:'apples')}"
       count(int cnt): "You have eaten $cnt ${_apples(cnt)}."
-      
-Now see the generated classes: 
+
+Now see the generated classes:
 
     class ExampleMessages {
         const ExampleMessages();
@@ -171,7 +171,7 @@ Now see the generated classes:
         String _apples(int cnt) => "${_plural(cnt, one:'apple', many:'apples')}";
         String count(int cnt) => "You have eaten $cnt ${_apples(cnt)}.";
     }         
-    
+
 See how you can **reuse** the pluralization of `_apples(int cnt)`? (!!!)
 
 There are three functions you can use in your message:
@@ -183,14 +183,14 @@ There are three functions you can use in your message:
     String _ordinal(int count, {String zero, String one, String two, String few, String many, String other})
 
 `_plural` and `_cardinal` do the same. I just felt that `_plural`
- sounds a little bit less scary and in most cases that's the one you need.
+sounds a little bit less scary and in most cases that's the one you need.
 
 We need only two forms of the word "apple" in English. "Apple" (one) and "apples" (many).
 But in Czech, we need three:
 
     apples:
       _apples(int cnt): "${_plural(cnt, one:'jablko', few: 'jablka', many:'jablek')}"
- 
+
 See also:
 
 * http://cldr.unicode.org/index/cldr-spec/plural-rules
@@ -216,14 +216,22 @@ The package simply generates message classes, that's all.
       print(m.apples.count(2));
       print(m.apples.count(5));    
     }    
-                      
-Where and how to store instances of these message classes - 
+
+Where and how to store instances of these message classes -
 again, **up to you**. I would consider ScopedModel for Flutter and registering
 messages instance into dependency injection in AngularDart.
 
-But in this case a singleton would be acceptable also.     
+But in this case a singleton would be acceptable also.
 
 # Customization and speacial features
+
+## Support for regions
+
+You might need to support multiple regions for one language. Use common locale names as file suffixes:
+
+    messages.i69n.yaml
+    messages.en_US.i69n.yaml
+    messages.en_GB.i69n.yaml
 
 ## Dynamic access using String keys
 
@@ -231,7 +239,7 @@ It's still useful to access your messages using the String keys in some cases. F
 of the message is composed dynamically at runtime, maybe like this:
 
     var vehicleTypeMessageKey = "VehicleType.${data['type']'}";
- 
+
 You can access your messages like this:
 
     print('Static:  ${m.generic.ok}');
@@ -239,7 +247,7 @@ You can access your messages like this:
     print('Or even: ${m['generic.ok']}');
 
 In case the key doesn't exist, an exception is thrown:
-    
+
     ...
     throw Exception('Message $key doesn\'t exist in $this');
 
@@ -259,7 +267,7 @@ In such case use a simple flag 'nomap':
       _i69n: nomap
       done: Done
       ok: OK             
-      
+
 No message in 'generic' message group will be accessible through the `[]` operator. Scope of the flag is very narrow - one message object
 in one file. Flag is not inherited into lower levels of messages and in
 most cases you want to repeat it in all translations files to make an impact.
@@ -272,8 +280,8 @@ you should be fine.
     message: Let's go!
     ...
     String get message => "Let's go!";
-                
-Only "\t", "\r" and "\n" characters are automatically escaped by i69n. 
+
+Only "\t", "\r" and "\n" characters are automatically escaped by i69n.
 
     message: "Let's\ngo!" // quotes needed by YAML, \n is converted to new line by YAML
     ...
@@ -287,7 +295,7 @@ If you need to disable escaping, use "noescape" flag.
 ### Escaping the details of escaping
 
 These are a few examples of more complicated strings in which you might need to add a backslash here and there:
-  
+
     problematic: "Hello \\\"world\\\"!"  
     //                  ^^^ yes, tripple backslash
     
@@ -296,17 +304,17 @@ These are a few examples of more complicated strings in which you might need to 
     
     alsoProblematic(int count): "${_plural(count, zero:'didn\\'t find any tasks', other: 'found some tasks')}"
     //                                                      ^ here
-    
+
 Please prefer single quotes inside pluralization functions.
 
-But in most cases you will be fine. Just observe generated classes and maybe experiment a little bit.    
-    
+But in most cases you will be fine. Just observe generated classes and maybe experiment a little bit.
+
 ## More configuration flags
 
 So far only 'noescape' and 'nomap'. If you need both, separate them with comma.
 
     _i69n: noescape,nomap            
-     
+
 ## Custom pluralization
 
 The package can correctly decide between 'one', 'few', 'many', etc. only for
@@ -316,12 +324,51 @@ and [Czech](lib/src/cs.dart) and [English](lib/src/en.dart)
 implementation.
 
 If you implement support for your language, please let me know,
- I'll gladly embed it into the package: tomucha@gmail.com
- 
-# TODO
+I'll gladly embed it into the package: tomucha@gmail.com
 
-* Current limitation: default language must be english
-* TODO: support custom imports
+## Language of the default file
+
+The default file (the one without language code in the file name) is supposed to be in English (meaning English locales are used in pluralization functions). You can change that by adding a 'language' to the file:
+
+    _i69n_language: de
+    generic:
+      done: Erledigt
+      ok: OK
+
+The '_i69n_language' flag is only meaningful on the first line of the default file, there is no reason to use it anywhere else.
+
+## Custom imports and custom types
+
+It might be usefull to teach your message objects some tyep control, for example:
+
+    friends:
+      michael:
+        name: Michael Friend
+        description: My good friend.
+      eva:
+        name: Eva Friend
+        description: My not so good friend.
+
+It's obvious that 'friends' should implement some kind of interface so you can work with them in a type-safe way. You can achieve that by adding a 'implements' flag:
+
+    friends:
+      michael:
+        _i69n_implements: MyFriendInterface
+        name: Michael Friend
+        description: My good friend.
+      eva:
+        _i69n_implements: MyFriendInterface
+        name: Eva Friend
+        description: My not so good friend.
+
+In most case it should be enough to add 'implements' flag  in the default messages file only.
+And you will probably need to import that interface. Just put 'import' flag at the beginning of the file:
+
+    _i69n_import: package:my_app/my_friend_interface.dart
+
+And you can use the import flag to import any other file (for example with some kind of number formatting). Separate multiple imports by comma.
+
+     _i69n_import: package:my_app/my_friend_interface.dart,package:my_app/my_number_formatting.dart
 
 # Example
 
@@ -331,7 +378,7 @@ See [example](example). Clone the package repository ([https://github.com/fnx-io
 
 or
 
-    pub run build_runner serve example:8080
+    dart run build_runner serve example:8080
 
 Now open the browser http://localhost:8080/ and watch the dev tools console.
 

@@ -1,3 +1,7 @@
+## 2.1.1
+
+- support for regions
+
 ## 2.1.0
 
 - new 'prenullsafe' flag, which generate 'pre null safe' Dart code ('String' instead of 'String?')
