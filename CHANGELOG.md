@@ -1,6 +1,7 @@
-## 2.1.1
+## 3.0.0-alpha.1
 
-- support for regions
+- support for custom types and custom imports
+- added docs for region support
 
 ## 2.1.0
 
@@ -32,8 +33,8 @@
 
 ## 1.0.0
 
-- possibility to customize generator behaviour with flags 
-- map operator is now generated only for objects with 'map' flag 
+- possibility to customize generator behaviour with flags
+- map operator is now generated only for objects with 'map' flag
 
 ## 0.5.0
 
@@ -51,7 +52,7 @@
 
 - Upgrade to Dart 2.5.1 and build_runner 1.7.1
 - added possibility to access messages with string keys, not only Dart identifiers (i.e. `m['generic.ok']`)
-- output is formatted with Dartfmt  
+- output is formatted with Dartfmt
 
 ## 0.1.0
 
