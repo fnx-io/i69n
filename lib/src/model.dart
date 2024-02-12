@@ -28,8 +28,7 @@ class TodoItem {
   TodoItem? parent;
   String? prefix;
 
-  String? get path =>
-      parent == null ? meta.languageCode : '${parent!.path}.$prefix';
+  String? get path => parent == null ? meta.languageCode : '${parent!.path}.$prefix';
 
   bool hasFlag(String flag) {
     return (flags?.contains(flag) ?? false);
@@ -38,11 +37,9 @@ class TodoItem {
   TodoItem(this.prefix, this.parent, this.meta, this.content) {
     if (content['_i69n'] != null) {
       if (content['_i69n'] is! String) {
-        throw Exception(
-            'Multiple flags in _i69n configuration message key must be comma separated');
+        throw Exception('Multiple flags in _i69n configuration message key must be comma separated');
       }
-      flags =
-          (content['_i69n'] as String).split(',').map((f) => f.trim()).toSet();
+      flags = (content['_i69n'] as String).split(',').map((f) => f.trim()).toSet();
     } else {
       // ignore: prefer_collection_literals
       flags = Set();
