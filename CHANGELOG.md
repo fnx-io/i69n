@@ -1,3 +1,9 @@
+## 3.1.0
+
+- Bump the min sdk to `3.6.0`
+- Update `dart_style` constraint to `^3.0.0`
+- Updated other dependencies
+
 ## 3.0.0-alpha.1
 
 - support for custom types and custom imports
