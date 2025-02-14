@@ -59,7 +59,9 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
     output.writeln('');
   }
   try {
-    var formatter = DartFormatter();
+    var formatter = DartFormatter(
+      languageVersion: DartFormatter.latestShortStyleLanguageVersion,
+    );
     return formatter.format(output.toString());
   } catch (e) {
     print(
