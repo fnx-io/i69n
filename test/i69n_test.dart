@@ -129,7 +129,8 @@ void main() {
       expect(escapeDartString("""Multiline
 message"""), equals(r"Multiline\nmessage")); // handles multiline strings
       expect(
-          escapeDartString(r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY"),
+          escapeDartString(
+              r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY"),
           equals(
               r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY")); // doesn't escape inside ${...}
     });
@@ -183,7 +184,8 @@ message"""), equals(r"Multiline\nmessage")); // handles multiline strings
   });
 }
 
-void testMeta(String name, {bool? isDefault, String? defaultObjectName, String? objectName, String? languageCode, String? localeName}) {
+void testMeta(String name,
+    {bool? isDefault, String? defaultObjectName, String? objectName, String? languageCode, String? localeName}) {
   var meta = generateMessageObjectName(name);
   test('$name: isDefault', () {
     expect(meta.isDefault, equals(isDefault));

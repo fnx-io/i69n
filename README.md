@@ -386,6 +386,11 @@ Now open the browser http://localhost:8080/ and watch the dev tools console.
 
 Created by [https://fnx.io](https://fnx.io).
 
+# Special thanks to:
+
+- [Anna Leushchenko](https://medium.com/@foxanna)
+
 # See also:
 
-https://pub.dev/packages/preconditions
+- https://pub.dev/packages/preconditions
+- https://medium.com/flutter-community/yet-another-localization-approach-in-flutter-477cf058ba41

@@ -22,22 +22,28 @@ void registerResolver(String languageCode, CategoryResolver resolver) {
 ///
 /// Same as ordinal.
 ///
-String plural(int count, String languageCode, {String? zero, String? one, String? two, String? few, String? many, String? other}) {
-  return _resolvePlural(count, languageCode, QuantityType.cardinal, zero: zero, one: one, two: two, few: few, many: many, other: other);
+String plural(int count, String languageCode,
+    {String? zero, String? one, String? two, String? few, String? many, String? other}) {
+  return _resolvePlural(count, languageCode, QuantityType.cardinal,
+      zero: zero, one: one, two: two, few: few, many: many, other: other);
 }
 
 ///
 /// See: http://cldr.unicode.org/index/cldr-spec/plural-rules
 ///
-String cardinal(int count, String languageCode, {String? zero, String? one, String? two, String? few, String? many, String? other}) {
-  return _resolvePlural(count, languageCode, QuantityType.cardinal, zero: zero, one: one, two: two, few: few, many: many, other: other);
+String cardinal(int count, String languageCode,
+    {String? zero, String? one, String? two, String? few, String? many, String? other}) {
+  return _resolvePlural(count, languageCode, QuantityType.cardinal,
+      zero: zero, one: one, two: two, few: few, many: many, other: other);
 }
 
 ///
 /// See: http://cldr.unicode.org/index/cldr-spec/plural-rules
 ///
-String ordinal(int count, String languageCode, {String? zero, String? one, String? two, String? few, String? many, String? other}) {
-  return _resolvePlural(count, languageCode, QuantityType.ordinal, zero: zero, one: one, two: two, few: few, many: many, other: other);
+String ordinal(int count, String languageCode,
+    {String? zero, String? one, String? two, String? few, String? many, String? other}) {
+  return _resolvePlural(count, languageCode, QuantityType.ordinal,
+      zero: zero, one: one, two: two, few: few, many: many, other: other);
 }
 
 Map<String, CategoryResolver> _resolverRegistry = {

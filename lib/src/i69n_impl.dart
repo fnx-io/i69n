@@ -17,7 +17,8 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
 
   var output = StringBuffer();
 
-  output.writeln('// ignore_for_file: unused_element, unused_field, camel_case_types, annotate_overrides, prefer_single_quotes');
+  output.writeln(
+      '// ignore_for_file: unused_element, unused_field, camel_case_types, annotate_overrides, prefer_single_quotes');
   output.writeln('// GENERATED FILE, do not edit!');
   output.writeln('import \'package:i69n/i69n.dart\' as i69n;');
   if (meta.defaultFileName != null) {
@@ -51,7 +52,8 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
   output.writeln('\ti69n.ordinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
   output.writeln(
       'String _cardinal(int count, {String$nullableChar zero, String$nullableChar one, String$nullableChar two, String$nullableChar few, String$nullableChar many, String$nullableChar other}) =>');
-  output.writeln('\ti69n.cardinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
+  output
+      .writeln('\ti69n.cardinal(count, _languageCode, zero:zero, one:one, two:two, few:few, many:many, other:other);');
   output.writeln('');
 
   for (var todo in todoList) {
@@ -98,7 +100,8 @@ ClassMeta generateMessageObjectName(String fileName) {
     if (nameParts.length >= 2) {
       var languageCode = nameParts[1];
       if (twoCharsLower.allMatches(languageCode).length != 1) {
-        throw Exception('Wrong language code $languageCode in file name $fileName. Language code must match $twoCharsLower');
+        throw Exception(
+            'Wrong language code $languageCode in file name $fileName. Language code must match $twoCharsLower');
       }
       result.languageCode = languageCode;
       result.localeName = languageCode;
@@ -106,7 +109,8 @@ ClassMeta generateMessageObjectName(String fileName) {
     if (nameParts.length == 3) {
       var countryCode = nameParts[2];
       if (twoCharsUpper.allMatches(countryCode).length != 1) {
-        throw Exception('Wrong country code $countryCode in file name $fileName. Country code must match $twoCharsUpper');
+        throw Exception(
+            'Wrong country code $countryCode in file name $fileName. Country code must match $twoCharsUpper');
       }
       result.localeName = '${result.languageCode}_$countryCode';
     }

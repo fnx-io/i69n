@@ -84,7 +84,8 @@ class InvoiceExampleMessages_cs extends InvoiceExampleMessages {
 class ApplesExampleMessages_cs extends ApplesExampleMessages {
   final ExampleMessages_cs _parent;
   const ApplesExampleMessages_cs(this._parent) : super(_parent);
-  String _apples(int cnt) => "${_plural(cnt, zero: 'fakt málo jablek', one: 'jedno jablko', few: '$cnt jablka', many: '$cnt jablek')}";
+  String _apples(int cnt) =>
+      "${_plural(cnt, zero: 'fakt málo jablek', one: 'jedno jablko', few: '$cnt jablka', many: '$cnt jablek')}";
   String count(int cnt) => "Snědl jsi ${_apples(cnt)}.";
   Object operator [](String key) {
     var index = key.indexOf('.');
