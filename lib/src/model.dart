@@ -27,6 +27,7 @@ class TodoItem {
   YamlMap content;
   TodoItem? parent;
   String? prefix;
+  BuilderOptions? options;
 
   String? get path => parent == null ? meta.languageCode : '${parent!.path}.$prefix';
 
@@ -34,7 +35,11 @@ class TodoItem {
     return (flags?.contains(flag) ?? false);
   }
 
-  TodoItem(this.prefix, this.parent, this.meta, this.content) {
+  bool hasGlobalFlag(String flag) {
+    return options?.config[flag] == true;
+  }
+
+  TodoItem(this.prefix, this.parent, this.meta, this.content, {this.options}) {
     if (content['_i69n'] != null) {
       if (content['_i69n'] is! String) {
         throw Exception('Multiple flags in _i69n configuration message key must be comma separated');
