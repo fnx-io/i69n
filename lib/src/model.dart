@@ -1,4 +1,4 @@
-part of i69n;
+part of "i69n_impl.dart";
 
 class ClassMeta {
   ClassMeta? parent;

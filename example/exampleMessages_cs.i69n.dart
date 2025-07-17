@@ -6,12 +6,33 @@ import 'exampleMessages.i69n.dart';
 String get _languageCode => 'cs';
 String get _localeName => 'cs';
 
-String _plural(int count, {String? zero, String? one, String? two, String? few, String? many, String? other}) =>
-    i69n.plural(count, _languageCode, zero: zero, one: one, two: two, few: few, many: many, other: other);
-String _ordinal(int count, {String? zero, String? one, String? two, String? few, String? many, String? other}) =>
-    i69n.ordinal(count, _languageCode, zero: zero, one: one, two: two, few: few, many: many, other: other);
-String _cardinal(int count, {String? zero, String? one, String? two, String? few, String? many, String? other}) =>
-    i69n.cardinal(count, _languageCode, zero: zero, one: one, two: two, few: few, many: many, other: other);
+String _plural(int count,
+        {String? zero,
+        String? one,
+        String? two,
+        String? few,
+        String? many,
+        String? other}) =>
+    i69n.plural(count, _languageCode,
+        zero: zero, one: one, two: two, few: few, many: many, other: other);
+String _ordinal(int count,
+        {String? zero,
+        String? one,
+        String? two,
+        String? few,
+        String? many,
+        String? other}) =>
+    i69n.ordinal(count, _languageCode,
+        zero: zero, one: one, two: two, few: few, many: many, other: other);
+String _cardinal(int count,
+        {String? zero,
+        String? one,
+        String? two,
+        String? few,
+        String? many,
+        String? other}) =>
+    i69n.cardinal(count, _languageCode,
+        zero: zero, one: one, two: two, few: few, many: many, other: other);
 
 class ExampleMessages_cs extends ExampleMessages {
   const ExampleMessages_cs();
@@ -21,7 +42,8 @@ class ExampleMessages_cs extends ExampleMessages {
   Object operator [](String key) {
     var index = key.indexOf('.');
     if (index > 0) {
-      return (this[key.substring(0, index)] as i69n.I69nMessageBundle)[key.substring(index + 1)];
+      return (this[key.substring(0, index)]
+          as i69n.I69nMessageBundle)[key.substring(index + 1)];
     }
     switch (key) {
       case 'generic':
@@ -43,7 +65,8 @@ class GenericExampleMessages_cs extends GenericExampleMessages {
   Object operator [](String key) {
     var index = key.indexOf('.');
     if (index > 0) {
-      return (this[key.substring(0, index)] as i69n.I69nMessageBundle)[key.substring(index + 1)];
+      return (this[key.substring(0, index)]
+          as i69n.I69nMessageBundle)[key.substring(index + 1)];
     }
     switch (key) {
       case 'done':
@@ -60,11 +83,13 @@ class InvoiceExampleMessages_cs extends InvoiceExampleMessages {
   String get create => "Vytvořit fakturu";
   String get delete => "Smazat fakturu";
   String get help => "Tuhle funkci použij na vytváření faktur. Boží!";
-  String count(int a) => "Už jsi vytvořil ${_plural(a, one: 'fakturu', few: 'faktury', many: 'faktur')}.";
+  String count(int a) =>
+      "Už jsi vytvořil ${_plural(a, one: 'fakturu', few: 'faktury', many: 'faktur')}.";
   Object operator [](String key) {
     var index = key.indexOf('.');
     if (index > 0) {
-      return (this[key.substring(0, index)] as i69n.I69nMessageBundle)[key.substring(index + 1)];
+      return (this[key.substring(0, index)]
+          as i69n.I69nMessageBundle)[key.substring(index + 1)];
     }
     switch (key) {
       case 'create':
@@ -90,7 +115,8 @@ class ApplesExampleMessages_cs extends ApplesExampleMessages {
   Object operator [](String key) {
     var index = key.indexOf('.');
     if (index > 0) {
-      return (this[key.substring(0, index)] as i69n.I69nMessageBundle)[key.substring(index + 1)];
+      return (this[key.substring(0, index)]
+          as i69n.I69nMessageBundle)[key.substring(index + 1)];
     }
     switch (key) {
       case '_apples':

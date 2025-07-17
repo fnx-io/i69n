@@ -13,7 +13,7 @@ dependencies:
   dart_style: ^3.0.0
 
 dev_dependencies:
-  pedantic: ^1.11.0
+  lints: ^5.0.0
   test: ^1.25.15
   build_runner: ^2.4.15
-  build_web_compilers: ^4.1.1
+#  build_web_compilers: ^4.1.1
