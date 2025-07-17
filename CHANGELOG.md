@@ -1,3 +1,7 @@
+## 3.2.1
+
+- Support for `build` package `>=3.0.0`
+
 ## 3.2.0
 
 - Added global configuration support for `nomap` and `notraverse` flags via `build.yaml`
