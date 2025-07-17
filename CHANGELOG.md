@@ -1,3 +1,10 @@
+## 3.2.0
+
+- Added global configuration support for `nomap` and `notraverse` flags via `build.yaml`
+- New `notraverse` flag to control dot notation access (`messages['nested.message']`)
+- Local override support: use `map`/`traverse` flags to override global `nomap`/`notraverse` settings
+- Enhanced test coverage for new functionality
+
 ## 3.1.0
 
 - Bump the min sdk to `3.6.0`

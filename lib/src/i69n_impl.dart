@@ -1,5 +1,6 @@
 library i69n;
 
+import 'package:build/build.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:yaml/yaml.dart';
 
@@ -8,12 +9,12 @@ part 'model.dart';
 Pattern twoCharsLower = RegExp('^[a-z]{2,3}\$');
 Pattern twoCharsUpper = RegExp('^[A-Z]{2,3}\$');
 
-String generateDartContentFromYaml(ClassMeta meta, String yamlContent) {
+String generateDartContentFromYaml(ClassMeta meta, String yamlContent, BuilderOptions options) {
   var messages = (loadYaml(yamlContent) as YamlMap);
 
   var todoList = <TodoItem>[];
 
-  prepareTodoList(null, null, todoList, messages, meta);
+  prepareTodoList(null, null, todoList, messages, meta, options);
 
   var output = StringBuffer();
 
@@ -160,11 +161,28 @@ const _reserved = ['_i69n', '_i69n_language', '_i69n_import'];
 
 void renderTodoItemMapOperator(TodoItem todo, StringBuffer output) {
   output.writeln('\tObject operator[](String key) {');
-  output.writeln('\t\tvar index = key.indexOf(\'.\');');
-  output.writeln('\t\tif (index > 0) {');
-  output.writeln('\t\t\treturn (this[key.substring(0,index)] as i69n.I69nMessageBundle)[key.substring(index+1)];');
-  output.writeln('\t\t}');
-  if (!todo.hasFlag('nomap')) {
+
+  final shouldDisableMap = todo.hasFlag('nomap') || (!todo.hasFlag('map') && todo.hasGlobalFlag('nomap'));
+  final shouldDisableTraverse =
+      todo.hasFlag('notraverse') || (!todo.hasFlag('traverse') && todo.hasGlobalFlag('notraverse'));
+
+  if (shouldDisableMap && shouldDisableTraverse) {
+    output.writeln(
+        '\t\tthrow Exception(\'[] operator is disabled in ${todo.path}, see _i69n: nomap, notraverse flag.\');');
+    output.writeln('\t}');
+    return;
+  }
+
+  if (!shouldDisableTraverse) {
+    output.writeln('\t\tvar index = key.indexOf(\'.\');');
+    output.writeln('\t\tif (index > 0) {');
+    output.writeln('\t\t\treturn (this[key.substring(0,index)] as i69n.I69nMessageBundle)[key.substring(index+1)];');
+    output.writeln('\t\t}');
+  }
+
+  if (shouldDisableMap) {
+    output.writeln('\t\tthrow Exception(\'[] operator is disabled in ${todo.path}, see _i69n: nomap flag.\');');
+  } else {
     output.writeln('\t\tswitch(key) {');
     todo.content.forEach((k, v) {
       if (!_reserved.contains(k)) {
@@ -185,8 +203,6 @@ void renderTodoItemMapOperator(TodoItem todo, StringBuffer output) {
       output.writeln('\t\t\tdefault: return super[key];');
     }
     output.writeln('\t\t}');
-  } else {
-    output.writeln('\t\tthrow Exception(\'[] operator is disabled in ${todo.path}, see _i69n: nomap flag.\');');
   }
   output.writeln('\t}');
 }
@@ -217,14 +233,21 @@ void renderTodoItemProperties(TodoItem todo, StringBuffer output) {
   });
 }
 
-void prepareTodoList(String? prefix, TodoItem? parent, List<TodoItem> todoList, YamlMap messages, ClassMeta name) {
-  var todo = TodoItem(prefix, parent, name, messages);
+void prepareTodoList(
+  String? prefix,
+  TodoItem? parent,
+  List<TodoItem> todoList,
+  YamlMap messages,
+  ClassMeta name,
+  BuilderOptions? options,
+) {
+  var todo = TodoItem(prefix, parent, name, messages, options: options);
   todoList.add(todo);
 
   messages.forEach((k, v) {
     if (v is YamlMap) {
       var prefix = _firstCharUpper(k);
-      prepareTodoList(k, todo, todoList, v, name.nest(prefix));
+      prepareTodoList(k, todo, todoList, v, name.nest(prefix), options);
     }
   });
 }

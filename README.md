@@ -272,6 +272,47 @@ No message in 'generic' message group will be accessible through the `[]` operat
 in one file. Flag is not inherited into lower levels of messages and in
 most cases you want to repeat it in all translations files to make an impact.
 
+## Global configuration for map operators
+
+For large projects with many translation files, you can configure `nomap` and `notraverse` flags globally through `build.yaml`:
+
+    targets:
+      $default:
+        builders:
+          i69n|yamlBasedBuilder:
+            options:
+              nomap: true      # Disable simple key access globally
+              notraverse: true # Disable dot notation access globally
+
+### Local override of global settings
+
+When global settings are configured, you can still override them locally in specific message files:
+
+    _i69n: map        # Enable simple key access despite global nomap: true
+    hello: "Hello"    # Now accessible via messages['hello']
+    
+    nested:
+      _i69n: traverse # Enable dot notation despite global notraverse: true  
+      message: "Test" # Now accessible via messages['nested.message']
+
+### notraverse flag
+
+The `notraverse` flag controls access to nested messages using dot notation:
+
+    _i69n: notraverse
+    hello: "Hello"
+    nested:
+      message: "Nested message"
+
+With `notraverse`, `messages['hello']` works but `messages['nested.message']` throws an exception.
+
+### Combining flags
+
+- **No flags**: Both `messages['hello']` and `messages['nested.message']` work
+- **nomap only**: `messages['hello']` fails, `messages['nested.message']` works  
+- **notraverse only**: `messages['hello']` works, `messages['nested.message']` fails
+- **Both flags**: Both `messages['hello']` and `messages['nested.message']` fail
+
 ## Escaping special characters
 
 i69n uses double quotes in generated source files. Unless you need to use double quotes in your string,

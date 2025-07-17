@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_single_quotes
+import 'package:build/build.dart';
 import 'package:i69n/i69n.dart';
 import 'package:i69n/src/i69n_impl.dart';
 import 'package:test/test.dart';
@@ -98,7 +99,7 @@ void main() {
           '  status:\n'
           '    name: not\n';
 
-      prepareTodoList(null, null, todoList, loadYaml(yaml), root);
+      prepareTodoList(null, null, todoList, loadYaml(yaml), root, null);
       todoList.sort((a, b) {
         return a.meta.objectName!.compareTo(b.meta.objectName!);
       });
@@ -158,7 +159,7 @@ message"""), equals(r"Multiline\nmessage")); // handles multiline strings
           '    name2: not2\n'
           '    name3: not3\n';
 
-      prepareTodoList(null, null, todoList, loadYaml(yaml), root);
+      prepareTodoList(null, null, todoList, loadYaml(yaml), root, null);
 
       var output = StringBuffer();
 
@@ -178,8 +179,175 @@ message"""), equals(r"Multiline\nmessage")); // handles multiline strings
       expect(m.apples.problematic(0), equals("didn't find any tasks"));
       expect(m.apples.problematic(1), equals("found 1 task"));
       expect(m.apples.problematic(2), equals("found 2 tasks"));
+      expect(m.apples.problematic(3), equals("found 3 tasks"));
       expect(m.apples.quotes, equals('Hello "world"!'));
       expect(m.apples.quotes2, equals('Hello "world"!'));
+    });
+  });
+
+  group('Global nomap functionality', () {
+    test('Global nomap disabled by default', () {
+      var root = ClassMeta();
+      root.objectName = 'Test';
+      root.defaultObjectName = 'Test';
+      root.isDefault = true;
+      root.languageCode = "en";
+      var todoList = <TodoItem>[];
+      var yaml = 'hello: "Hello"';
+
+      prepareTodoList(null, null, todoList, loadYaml(yaml), root, null);
+
+      var output = StringBuffer();
+      for (var todo in todoList) {
+        renderTodoItem(todo, output);
+      }
+
+      var result = output.toString();
+      // Should contain switch-case block (operator[] enabled)
+      expect(result.contains("switch(key)"), isTrue);
+      expect(result.contains("case 'hello': return hello;"), isTrue);
+    });
+
+    test('Global nomap enabled', () {
+      var root = ClassMeta();
+      root.objectName = 'Test';
+      root.defaultObjectName = 'Test';
+      root.isDefault = true;
+      root.languageCode = "en";
+      var todoList = <TodoItem>[];
+      var yaml = 'hello: "Hello"';
+
+      // Mock BuilderOptions with nomap: true
+      var mockOptions = _MockBuilderOptions({'nomap': true});
+      prepareTodoList(null, null, todoList, loadYaml(yaml), root, mockOptions);
+
+      var output = StringBuffer();
+      for (var todo in todoList) {
+        renderTodoItem(todo, output);
+      }
+
+      var result = output.toString();
+      // Should not contain switch-case block (operator[] disabled)
+      expect(result.contains("switch(key)"), isFalse);
+      expect(result.contains("throw Exception('[] operator is disabled"), isTrue);
+    });
+
+    test('Local map overrides global nomap', () {
+      var root = ClassMeta();
+      root.objectName = 'Test';
+      root.defaultObjectName = 'Test';
+      root.isDefault = true;
+      root.languageCode = "en";
+      var todoList = <TodoItem>[];
+      var yaml = '_i69n: map\nhello: "Hello"';
+
+      // Mock BuilderOptions with nomap: true
+      var mockOptions = _MockBuilderOptions({'nomap': true});
+      prepareTodoList(null, null, todoList, loadYaml(yaml), root, mockOptions);
+
+      var output = StringBuffer();
+      for (var todo in todoList) {
+        renderTodoItem(todo, output);
+      }
+
+      var result = output.toString();
+      // Local 'map' should override global 'nomap'
+      expect(result.contains("switch(key)"), isTrue);
+      expect(result.contains("case 'hello': return hello;"), isTrue);
+    });
+
+    test('Local nomap overrides global setting', () {
+      var root = ClassMeta();
+      root.objectName = 'Test';
+      root.defaultObjectName = 'Test';
+      root.isDefault = true;
+      root.languageCode = "en";
+      var todoList = <TodoItem>[];
+      var yaml = '_i69n: nomap\nhello: "Hello"';
+
+      // Mock BuilderOptions with nomap: false (disabled)
+      var mockOptions = _MockBuilderOptions({'nomap': false});
+      prepareTodoList(null, null, todoList, loadYaml(yaml), root, mockOptions);
+
+      var output = StringBuffer();
+      for (var todo in todoList) {
+        renderTodoItem(todo, output);
+      }
+
+      var result = output.toString();
+      // Local 'nomap' should disable operator[] even when global is false
+      expect(result.contains("switch(key)"), isFalse);
+      expect(result.contains("throw Exception('[] operator is disabled"), isTrue);
+    });
+
+    test('nomap allows traverse (dot navigation)', () {
+      var root = ClassMeta();
+      root.objectName = 'Test';
+      root.defaultObjectName = 'Test';
+      root.isDefault = true;
+      root.languageCode = "en";
+      var todoList = <TodoItem>[];
+      var yaml = '_i69n: nomap\nhello: "Hello"';
+
+      var mockOptions = _MockBuilderOptions({'nomap': true});
+      prepareTodoList(null, null, todoList, loadYaml(yaml), root, mockOptions);
+
+      var output = StringBuffer();
+      for (var todo in todoList) {
+        renderTodoItem(todo, output);
+      }
+
+      var result = output.toString();
+      // Should allow dot navigation but disable switch-case
+      expect(result.contains("var index = key.indexOf('.');"), isTrue);
+      expect(result.contains("switch(key)"), isFalse);
+      expect(result.contains("see _i69n: nomap flag"), isTrue);
+    });
+
+    test('notraverse disables dot navigation', () {
+      var root = ClassMeta();
+      root.objectName = 'Test';
+      root.defaultObjectName = 'Test';
+      root.isDefault = true;
+      root.languageCode = "en";
+      var todoList = <TodoItem>[];
+      var yaml = '_i69n: notraverse\nhello: "Hello"';
+
+      var mockOptions = _MockBuilderOptions({'notraverse': true});
+      prepareTodoList(null, null, todoList, loadYaml(yaml), root, mockOptions);
+
+      var output = StringBuffer();
+      for (var todo in todoList) {
+        renderTodoItem(todo, output);
+      }
+
+      var result = output.toString();
+      // Should disable only dot navigation, switch-case should work
+      expect(result.contains("switch(key)"), isTrue);
+      expect(result.contains("case 'hello': return hello;"), isTrue);
+    });
+
+    test('nomap + notraverse disables everything', () {
+      var root = ClassMeta();
+      root.objectName = 'Test';
+      root.defaultObjectName = 'Test';
+      root.isDefault = true;
+      root.languageCode = "en";
+      var todoList = <TodoItem>[];
+      var yaml = '_i69n: nomap,notraverse\nhello: "Hello"';
+
+      prepareTodoList(null, null, todoList, loadYaml(yaml), root, null);
+
+      var output = StringBuffer();
+      for (var todo in todoList) {
+        renderTodoItem(todo, output);
+      }
+
+      var result = output.toString();
+      // Should disable everything
+      expect(result.contains("var index = key.indexOf('.');"), isFalse);
+      expect(result.contains("switch(key)"), isFalse);
+      expect(result.contains("see _i69n: nomap, notraverse flag"), isTrue);
     });
   });
 }
@@ -202,4 +370,16 @@ void testMeta(String name,
   test('$name: languageCode', () {
     expect(meta.languageCode, equals(languageCode));
   });
+}
+
+class _MockBuilderOptions implements BuilderOptions {
+  final Map<String, dynamic> _config;
+
+  _MockBuilderOptions(this._config);
+
+  @override
+  Map<String, dynamic> get config => _config;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => null;
 }

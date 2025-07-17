@@ -5,9 +5,13 @@
 import 'package:build/build.dart';
 import 'package:i69n/src/i69n_impl.dart';
 
-Builder yamlBasedBuilder(BuilderOptions options) => YamlBasedBuilder();
+Builder yamlBasedBuilder(BuilderOptions options) => YamlBasedBuilder(options);
 
 class YamlBasedBuilder implements Builder {
+  const YamlBasedBuilder(this.options);
+
+  final BuilderOptions options;
+
   @override
   Future build(BuildStep buildStep) async {
     // Each [buildStep] has a single input.
@@ -17,7 +21,7 @@ class YamlBasedBuilder implements Builder {
     var contents = await buildStep.readAsString(inputId);
 
     var objectName = generateMessageObjectName(inputId.pathSegments.last);
-    var dartContent = generateDartContentFromYaml(objectName, contents);
+    var dartContent = generateDartContentFromYaml(objectName, contents, options);
 
     var copy = inputId.changeExtension('.dart');
 
