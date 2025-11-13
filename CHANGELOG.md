@@ -1,3 +1,7 @@
+## 3.3.0
+
+- Support for `build` package `<5.0.0`
+
 ## 3.2.1
 
 - Support for `build` package `>=3.0.0`
