@@ -134,6 +134,8 @@ message"""), equals(r"Multiline\nmessage")); // handles multiline strings
               r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY"),
           equals(
               r"XX${_plural(count, zero: 'didn\'t find any tasks', one: 'found 1 task', other: 'found $count tasks')}YY")); // doesn't escape inside ${...}
+      expect(escapeDartString('👋👋👋'), equals('👋👋👋'));
+      expect(escapeDartString('Hello 👋 name'), equals('Hello 👋 name'));
     });
 
     test('Generated source code', () {

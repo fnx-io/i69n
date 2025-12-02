@@ -1,3 +1,7 @@
+## 3.4.0
+
+- fixed emojis: https://github.com/fnx-io/i69n/issues/14 
+
 ## 3.3.0
 
 - Support for `build` package `<5.0.0`

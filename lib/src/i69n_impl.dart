@@ -261,30 +261,28 @@ String _renderFileNameError(String name) {
 }
 
 String? escapeDartString(String? string) {
-  if (string == null) {
-    return null;
-  }
-  if (string.isEmpty) {
-    return string;
-  }
-  var sb = StringBuffer();
-  var i = 0;
+  if (string == null) return null;
+  if (string.isEmpty) return string;
 
+  var sb = StringBuffer();
+  // Iterate over the Unicode code points (runes)
   for (var c in string.runes) {
     switch (c) {
-      case 9:
+      case 9: // \t (Horizontal Tab)
         sb.write('\\t');
         break;
-      case 10:
+      case 10: // \n (Line Feed)
         sb.write('\\n');
         break;
-      case 13:
+      case 13: // \r (Carriage Return)
         sb.write('\\r');
         break;
       default:
-        sb.write(string[i]);
+        // For all other code points, convert the code point back to its string representation
+        // This correctly handles both single-unit characters and surrogate pairs (emojis)
+        sb.writeCharCode(c);
+        break;
     }
-    i++;
   }
   return sb.toString();
 }
