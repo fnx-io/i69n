@@ -21,6 +21,7 @@ String generateDartContentFromYaml(ClassMeta meta, String yamlContent, BuilderOp
   output.writeln(
       '// ignore_for_file: unused_element, unused_field, camel_case_types, annotate_overrides, prefer_single_quotes');
   output.writeln('// GENERATED FILE, do not edit!');
+  output.writeln('// dart format off');
   output.writeln('import \'package:i69n/i69n.dart\' as i69n;');
   if (meta.defaultFileName != null) {
     output.writeln('import \'${meta.defaultFileName}\';');
