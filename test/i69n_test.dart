@@ -83,6 +83,16 @@ void main() {
       expect(plural(3, 'cs', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('FEW!'));
       expect(plural(10, 'cs', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('OTHER!'));
     });
+
+    test('uk', () {
+      expect(plural(1, 'uk', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('ONE!'));
+      expect(plural(2, 'uk', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('FEW!'));
+      expect(plural(5, 'uk', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('OTHER!'));
+      expect(plural(20, 'uk', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('OTHER!'));
+      expect(plural(21, 'uk', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('ONE!'));
+      expect(plural(22, 'uk', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('FEW!'));
+      expect(plural(25, 'uk', one: 'ONE!', few: 'FEW!', other: 'OTHER!'), equals('OTHER!'));
+    });
   });
 
   group('Message building', () {
